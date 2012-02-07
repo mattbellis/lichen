@@ -42,7 +42,7 @@ def main():
     ############################################################################
     mean = 5.0
     sigma = 1.0
-    values = np.random.normal(mean,sigma,1000)
+    values = np.random.normal(mean,sigma,10000)
 
     ############################################################################
     # Histogram of the data.
@@ -102,6 +102,7 @@ def main():
 
     starting_vals = [0.02, 100, 20]
     final_vals, success = optimize.leastsq(errfunc, starting_vals, args=(xpts, ypts))
+    print "mean: %3.2f\tsigma: %3.2f" % (mean,sigma)
     print starting_vals
     print final_vals
     print success
