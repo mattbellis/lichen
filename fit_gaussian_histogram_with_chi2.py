@@ -101,11 +101,18 @@ def main():
     errfunc = chi2_function(fitfunc)
 
     starting_vals = [0.02, 100, 20]
-    final_vals, success = optimize.leastsq(errfunc, starting_vals, args=(xpts, ypts))
+    #final_vals, success = optimize.leastsq(errfunc, starting_vals, args=(xpts, ypts))
+    final_vals, cov_x, infodict, mesg, success = optimize.leastsq(errfunc, starting_vals, args=(xpts, ypts),full_output=True)
     print "mean: %3.2f\tsigma: %3.2f" % (mean,sigma)
     print starting_vals
     print final_vals
     print success
+    print cov_x
+    for i in range(0,len(final_vals)):
+        print "%f +/- %f" % (final_vals[i], final_vals[i]*sqrt(cov_x[i][i]))
+    #print infodict
+    print mesg
+
 
     ############################################################################
     # Draw the fit if it succeeded.
