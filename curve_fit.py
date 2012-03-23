@@ -24,30 +24,19 @@ def linear(x,m,b):
 ################################################################################
 def main():
 
-    infile = open('linear_fit_data.dat')
+    #infile = open('linear_fit_data.dat')
 
     # Create some arrays to store the data.
     xdata = np.array([])
     ydata = np.array([])
     yerr  = np.array([])
 
-    #'''
-    for line in infile:
-        print line
-        vals = line.split()
-
-        if len(vals)>0:
-            xdata = np.append(xdata,float(vals[0]))
-            ydata = np.append(ydata,float(vals[1]))
-            yerr  = np.append(yerr,float(vals[2]))
-    #'''
-    
     #xdata = np.array([1.1, 2.0, 3.1, 4.2, 4.9])
     #ydata = np.array([1.0, 2.5, 3.0, 4.0, 5.1])
     #yerr  = np.array([0.4, 0.2, 0.4, 0.5, 0.4])
-    #xdata = np.linspace(0,4,10)
-    #ydata = linear(xdata,1.1,0.4) + 0.2*np.random.normal(size=len(xdata))
-    #yerr  = np.linspace(0.2,0.2,len(xdata))
+    xdata = np.linspace(0,4,10)
+    ydata = linear(xdata,1.1,0.4) + 0.2*np.random.normal(size=len(xdata))
+    yerr  = np.linspace(0.2,0.2,len(xdata))
     print xdata
     #for x,y,e in zip(xdata,ydata,yerr):
         #print "%5.2f %5.2f %5.2f" % (x,y,e)
