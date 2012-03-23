@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 ################################################################################
-def histo_err(values,bins=100,range=(0.0,10.0),fmt='o',color='blue',ecolor='black'):
+def histo_err(values,bins=100,range=None,fmt='o',color='blue',ecolor='black'):
 
     nentries_per_bin, bin_edges, patches = plt.hist(values,bins=bins,
             range=range,alpha=0.0) # Make histogram transparent.
