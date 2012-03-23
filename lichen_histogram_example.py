@@ -41,12 +41,12 @@ def main():
     ############################################################################
     mean = 5.0
     sigma = 1.0
-    values = np.random.normal(mean,sigma,1000)
+    values = np.random.normal(mean,sigma,10000)
 
     ############################################################################
     # Histogram of the data.
     ############################################################################
-    h = lch.histo_err(values,bins=100,range=(0.0,10.0)) # 
+    h = lch.histo_err(values,bins=50,range=(0.0,10.0),color='pink') # 
 
     ############################################################################
     # Let's format this histogram. 

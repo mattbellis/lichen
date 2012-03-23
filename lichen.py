@@ -2,10 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 ################################################################################
-def histo_err(values, bins=100,range=(0.0,10.0)):
+def histo_err(values,bins=100,range=(0.0,10.0),fmt='o',color='blue',ecolor='black'):
 
-    nentries_per_bin, bin_edges, patches = plt.hist(values,bins=100,
-            range=(0.0,10.0),alpha=0.0) # Make histogram transparent.
+    nentries_per_bin, bin_edges, patches = plt.hist(values,bins=bins,
+            range=range,alpha=0.0) # Make histogram transparent.
 
     # Create an errorbar plot using the info from the histogram.
     bin_width = bin_edges[1] - bin_edges[0] # Assumes evenly spaced bins.
@@ -19,8 +19,8 @@ def histo_err(values, bins=100,range=(0.0,10.0)):
                                          # of an array. We'll assume Gaussian
                                          # errors here.
 
-    ret = plt.errorbar(xpts, ypts, xerr=xpts_err, yerr=ypts_err,fmt='o',
-            color='blue',ecolor='black')
+    ret = plt.errorbar(xpts, ypts, xerr=xpts_err, yerr=ypts_err,fmt=fmt,
+            color=color,ecolor=ecolor)
 
     return ret
 
