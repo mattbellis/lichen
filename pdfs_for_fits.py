@@ -29,3 +29,10 @@ def chi2_function(fit_function):
     ret = lambda p, x, y: fit_function(p, x)-y
     return ret
 
+################################################################################
+# define function to calculate reduced chi-squared
+################################################################################
+def red_chi_sq(func, x, y, dy, params):
+    resids = y - func(x, *params)
+    chisq = ((resids/dy)**2).sum()
+    return chisq/float(x.size-params.size)

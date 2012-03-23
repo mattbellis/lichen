@@ -8,7 +8,7 @@ import scipy.optimize
 ################################################################################
 # define function to calculate reduced chi-squared
 ################################################################################
-def RedChiSqr(func, x, y, dy, params):
+def red_chi_sq(func, x, y, dy, params):
     resids = y - func(x, *params)
     chisq = ((resids/dy)**2).sum()
     return chisq/float(x.size-params.size)
@@ -54,7 +54,7 @@ def main():
 
     # Compute reduced chi square.
     # Need to do this to get proper uncertainties on the fit values.
-    rchisq = RedChiSqr(linear, xdata, ydata, yerr, nlfit)
+    rchisq = red_chi_sq(linear, xdata, ydata, yerr, nlfit)
 
     # Create fitted data for plotting the fit function over the measured data.
     qfit = np.array([xdata.min(), xdata.max()])
