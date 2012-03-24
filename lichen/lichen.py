@@ -1,8 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
+from scipy import optimize
+
 ################################################################################
-def histo_err(values,bins=100,range=None,fmt='o',color='blue',ecolor='black'):
+def hist_err(values,bins=100,range=None,fmt='o',color='blue',ecolor='black'):
 
     nentries_per_bin, bin_edges, patches = plt.hist(values,bins=bins,
             range=range,alpha=0.0) # Make histogram transparent.
@@ -22,8 +24,21 @@ def histo_err(values,bins=100,range=None,fmt='o',color='blue',ecolor='black'):
     ret = plt.errorbar(xpts, ypts, xerr=xpts_err, yerr=ypts_err,fmt=fmt,
             color=color,ecolor=ecolor)
 
-    return ret
+    return ret,xpts,ypts,xpts_err,ypts_err
 
+
+################################################################################
+def fit(func,xdata,ydata,starting_vals=None,yerr=None):
+
+    npars = len(starting_vals)
+
+    fit_params, cov_mat = optimize.curve_fit(func, xdata, ydata, starting_vals, sigma=yerr)
+
+    fit_params_errs = []
+    for i in xrange(npars):
+        fit_params_errs.append(np.sqrt(cov_mat[i][j]))
+
+    return fit_params,fit_params_errs,cov_mat
 
 
 

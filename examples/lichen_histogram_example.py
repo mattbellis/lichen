@@ -12,7 +12,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.mlab as mlab
 
-import lichen as lch
+import lichen.lichen as lch
 
 ################################################################################
 # main
@@ -46,7 +46,7 @@ def main():
     ############################################################################
     # Histogram of the data.
     ############################################################################
-    h = lch.histo_err(values,bins=50,range=(0.0,10.0),color='pink') # 
+    h = lch.hist_err(values,bins=50,range=(0.0,10.0),color='pink') # 
 
     ############################################################################
     # Let's format this histogram. 

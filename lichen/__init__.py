@@ -16,6 +16,4 @@ __copyright__ = 'XXX'
 
 
 from . import lichen
-#import numpy as np
-#import matplotlib.pyplot as plt
-
+from .pdfs import *

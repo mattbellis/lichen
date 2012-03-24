@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import scipy.optimize
 
 ################################################################################
-# define function to calculate reduced chi-squared
+# Define function to calculate reduced chi-squared
 ################################################################################
 def red_chi_sq(func, x, y, dy, params):
     resids = y - func(x, *params)

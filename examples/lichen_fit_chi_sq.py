@@ -65,7 +65,7 @@ def main():
     # Set the number of tick marks on the x-axis.
     subplot.locator_params(nbins=8)
 
-    fit_params,fit_params_errs,cov_mat = lch.fit(lichen.pdf_gaussian,xpts,ypts,[100.0,5.0,1.0],yerr=ypts_err)
+    fit_params,fit_params_errs,cov_mat = lch.fit(lichen.pdf_gaussian(),xpts,ypts,[100.0,5.0,1.0],yerr=ypts_err)
 
     # Need this command to display the figure.
     plt.show()
