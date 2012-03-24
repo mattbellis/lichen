@@ -21,6 +21,6 @@ import matplotlib.pylab as plt
 import lichen.lichen as lch
 
 x = np.random.normal(5,1,1000)
-h = lch.histo_err(x,bins=50)
+h = lch.hist_err(x,bins=50)
 plt.show()
 
