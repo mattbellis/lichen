@@ -13,7 +13,8 @@ import matplotlib.pyplot as plt
 import matplotlib.mlab as mlab
 
 from scipy import optimize
-from pdfs_for_fits import *
+#from pdfs import *
+import lichen.pdfs as pdfs
 
 ################################################################################
 # main
@@ -97,12 +98,14 @@ def main():
     ############################################################################
     # Run the fit.
     ############################################################################
-    fitfunc = pdf_gaussian()
-    errfunc = chi2_function(fitfunc)
+    fitfunc = pdfs.pdf_gaussian()
+    errfunc = pdfs.chi2_function(fitfunc)
 
     starting_vals = [0.02, 100, 20]
     #final_vals, success = optimize.leastsq(errfunc, starting_vals, args=(xpts, ypts))
     final_vals, cov_x, infodict, mesg, success = optimize.leastsq(errfunc, starting_vals, args=(xpts, ypts),full_output=True)
+    #final_vals,fopt,myiter,funcalls,warnflags,allvecs = optimize.fmin(errfunc,starting_vals,args=(xpts, ypts))
+    #final_vals = optimize.anneal(errfunc, starting_vals, args=(xpts, ypts),full_output=True,lower=0,upper=100000)
     print "mean: %3.2f\tsigma: %3.2f" % (mean,sigma)
     print starting_vals
     print final_vals
@@ -119,7 +122,7 @@ def main():
     ############################################################################
     plot_func = None
     if success:
-        plot_func = pdf_gaussian()
+        plot_func = pdfs.pdf_gaussian()
         x = np.linspace(0.0,10.0,100)
         y = plot_func(final_vals,x)
         y1 = plot_func(starting_vals,x)
