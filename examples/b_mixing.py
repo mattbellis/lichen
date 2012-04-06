@@ -40,7 +40,7 @@ def main():
     gamma = 1.0/1.547
     p_over_q = 1.5
     A = 1.0
-    deltaM = 1.5
+    deltaM = 0.4
     deltaG = 0.0
 
     charges = [[+1,+1],
@@ -91,6 +91,8 @@ def main():
     Nmm = len(events[1])
     Npm = len(events[2])
     Nmp = len(events[3])
+
+    print "%d %d %d %d" % (Npp,Nmm,Npm,Nmp)
 
     Acp = (Npp-Nmm)/float(Npp+Nmm) 
     deltaAcp = np.sqrt((sqrt(Npp)/Npp)**2 + (sqrt(Nmm)/Nmm)**2)
