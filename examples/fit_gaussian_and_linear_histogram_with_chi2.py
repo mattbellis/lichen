@@ -13,7 +13,9 @@ import matplotlib.pyplot as plt
 import matplotlib.mlab as mlab
 
 from scipy import optimize
-from pdfs_for_fits import *
+#from pdfs import *
+import lichen.pdfs as pdfs
+
 
 ################################################################################
 # main
@@ -116,10 +118,10 @@ def main():
     ############################################################################
     # Run the fit.
     ############################################################################
-    g_func = pdf_gaussian()
-    lin_func = pdf_linear()
-    fitfunc = pdf_addition(lin_func,g_func)
-    errfunc = chi2_function(fitfunc)
+    g_func = pdfs.pdf_gaussian()
+    lin_func = pdfs.pdf_linear()
+    fitfunc = pdfs.pdf_addition(lin_func,g_func)
+    errfunc = pdfs.chi2_function(fitfunc)
 
     starting_vals = [0.50,0.50,1.0,2.0,100,1.0,2.0] 
     #final_vals, success = optimize.leastsq(errfunc, starting_vals, args=(xpts, ypts),full_output=True)
@@ -139,7 +141,7 @@ def main():
     ############################################################################
     plot_func = None
     if success:
-        plot_func = pdf_addition(lin_func,g_func)
+        plot_func = pdfs.pdf_addition(lin_func,g_func)
         x = np.linspace(0.0,10.0,100)
         y = plot_func(final_vals,x)
         y1 = plot_func(starting_vals,x)

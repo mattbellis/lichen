@@ -36,3 +36,17 @@ def red_chi_sq(func, x, y, dy, params):
     resids = y - func(x, *params)
     chisq = ((resids/dy)**2).sum()
     return chisq/float(x.size-params.size)
+
+################################################################################
+# Linear function
+################################################################################
+def pdf_bmixing(deltat,pars):
+    
+    gamma = pars[0]
+    p = pars[1]
+    q = pars[2]
+    deltaM = pars[3]
+    
+    N = (1.0/4.0)*np.exp(-gamma*np.abs(deltat))*(p/q)*(1-np.cos(deltaM*deltat))
+    return N
+
