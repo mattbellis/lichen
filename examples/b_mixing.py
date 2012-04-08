@@ -84,8 +84,8 @@ def main():
 
     for i in range(0,4):
         subplots[1][i].hist(events[i],bins=50)
-        subplots[1][i].set_xlim(-10,10)
-        subplots[1][i].set_ylim(0,nevents/16)
+        #subplots[1][i].set_xlim(-10,10)
+        #subplots[1][i].set_ylim(0,nevents/16)
 
     Npp = len(events[0])
     Nmm = len(events[1])
