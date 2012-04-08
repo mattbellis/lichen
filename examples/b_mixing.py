@@ -73,7 +73,7 @@ def main():
     #'''
     events = [np.array([]),np.array([]),np.array([]),np.array([])]
     n=0
-    nevents = 10000
+    nevents = 100000
     while n<nevents:
 
         for i in range(0,4):
