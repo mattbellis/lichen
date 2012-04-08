@@ -9,6 +9,7 @@
 ################################################################################
 from math import *
 import numpy as np
+import scipy as sp
 import matplotlib.pyplot as plt
 import matplotlib.mlab as mlab
 
@@ -35,18 +36,25 @@ def main():
     ############################################################################
     # Generate values drawn from a normal (Gaussian) distribution.
     ############################################################################
-    deltat = np.linspace(-10,10,1000)
+    deltat_min = -10
+    deltat_max =  10
+    deltat_range =  deltat_max-deltat_min
+
+    deltat_mc = []
+    for i in range(0,4):
+        deltat_mc.append(deltat_range*np.random.rand(10000) + deltat_min)
+
+    print "deltat MC: %d" % (len(deltat_mc))
+
+    deltat = np.linspace(deltat_min,deltat_max,1000)
 
     gamma = 1.0/1.547
-    p_over_q = 1.5
+    p_over_q = 1.01
     A = 1.0
     deltaM = 0.4
     deltaG = 0.0
 
-    charges = [[+1,+1],
-               [-1,-1],
-               [+1,-1],
-               [-1,+1]]
+    charges = [[+1,+1], [-1,-1], [+1,-1], [-1,+1]]
 
     maxes = []
 
@@ -62,7 +70,8 @@ def main():
 
     max_prob = max(maxes)
 
-    events = [[],[],[],[]]
+    #'''
+    events = [np.array([]),np.array([]),np.array([]),np.array([])]
     n=0
     nevents = 10000
     while n<nevents:
@@ -79,13 +88,13 @@ def main():
             test = max_prob*np.random.rand()
             
             if test<prob:
-                events[i].append(val)
+                events[i] = np.append(events[i],val)
                 n += 1
 
     for i in range(0,4):
         subplots[1][i].hist(events[i],bins=50)
         subplots[1][i].set_xlim(-10,10)
-        subplots[1][i].set_ylim(0,nevents/16)
+        #subplots[1][i].set_ylim(0,nevents/16)
 
     Npp = len(events[0])
     Nmm = len(events[1])
@@ -102,29 +111,25 @@ def main():
     Acp = 2*(1-np.abs(1.0/p_over_q))
 
     print "Acp: %f" % (Acp)
+    #'''
 
-    '''
-    ############################################################################
-    # Histogram of the data.
-    ############################################################################
-    h = lch.hist_err(values,bins=50,range=(0.0,10.0),color='pink') # 
+    # Fit function.
+    gamma = 1.0/1.547
+    p_over_q = 1.01
+    A = 1.0
+    deltaM = 0.4
+    deltaG = 0.0
+    #N = pdfs.pdf_bmixing(deltat,[gamma,p_over_q,deltaM,deltaG,q1,q2])
+    n0 = Npp
+    n1 = Nmm
+    n2 = Npm 
+    n3 = Nmp
+    p0 = [gamma,p_over_q,deltaM,deltaG,n0,n1,n2,n3]
+    print p0
+    p1 = sp.optimize.fmin(pdfs.extended_maximum_likelihood_function,p0,args=(events,deltat_mc), maxiter=10000, maxfun=10000)
 
-    ############################################################################
-    # Let's format this histogram. 
-    # Note that we will do this by changing the values on the subplot (Axes), 
-    # not the histogram object.
-    ############################################################################
-    subplot.set_xlim(-1,11)
-    
-    subplot.set_xlabel('x variable',fontsize=20)
-    subplot.set_ylabel('# events',fontsize=20)
-    
-    # Note that we can easily include Latex code
-    subplot.set_title(r'$\mathrm{Gaussian\ distribution:}\ \mu=5,\ \sigma=1$',fontsize=30)
+    print p1
 
-    # Set the number of tick marks on the x-axis.
-    subplot.locator_params(nbins=8)
-    '''
 
     # Need this command to display the figure.
     plt.show()

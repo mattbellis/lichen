@@ -1,4 +1,5 @@
 import numpy as np
+import scipy as sp
 
 ################################################################################
 # Linear function
@@ -38,6 +39,52 @@ def red_chi_sq(func, x, y, dy, params):
     return chisq/float(x.size-params.size)
 
 ################################################################################
+# Part of a poisson term.
+################################################################################
+def pois(mu, k):
+    ret = -mu + k*np.log(mu)
+    return ret
+
+
+################################################################################
+# Extended maximum likelihood function
+################################################################################
+def extended_maximum_likelihood_function(p, x, y):
+
+    ret = 0
+
+    charges = [[+1,+1], [-1,-1], [+1,-1], [-1,+1]]
+
+    for i in range(0,4):
+        q1 = charges[i][0]
+        q2 = charges[i][1]
+
+        pars = list(p[0:4])
+        pars += [q1,q2]
+
+        #print "Printing pars:"
+        #print pars
+
+        norm_func = (pdf_bmixing(y[i],pars)).sum()/len(y)
+
+        #print "norm_func: %f" % (norm_func)
+
+        num = p[4+i] # Number of events in fit
+
+        #print "here"
+        #print pars
+        #print x[i]
+        #print -np.log(pdf_bmixing(x[i],pars))
+        #print (-np.log(pdf_bmixing(x[i],pars) / norm_func).sum()) 
+        #print pois(num,len(x[i]))
+
+        ret = (-np.log(pdf_bmixing(x[i],pars) / norm_func).sum()) - pois(num,len(x[i]))
+
+        #print "%f  %f" % (ret, norm_func)
+    return ret
+
+
+################################################################################
 # Linear function
 ################################################################################
 def pdf_bmixing(deltat,pars):
@@ -59,8 +106,8 @@ def pdf_bmixing(deltat,pars):
     #print "%d %f %f %f %f" % (qq,A,B,C,D)
     
     N = (1.0/4.0)*np.exp(-gamma*np.abs(deltat))*(
-            A*np.cosh(deltaG*deltat/2)-B*np.cos(deltaM*deltat) +
-            C*np.sinh(deltaG*deltat/2)-D*np.sin(deltaM*deltat) )
+            A*np.cosh(deltaG*deltat/2.0)+B*np.cos(deltaM*deltat) +
+            C*np.sinh(deltaG*deltat/2.0)+D*np.sin(deltaM*deltat) )
 
     return N
 
