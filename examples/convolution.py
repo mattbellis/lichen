@@ -23,12 +23,20 @@ def smear_with_gaussian_convolution(x,y,mean,sigma):
     npts = len(x)
 
     convolving_term = stats.norm(mean,sigma)
-
     convolving_pts = convolving_term.pdf(x)
 
-    convolved_function = signal.convolve(y/y.sum(),convolving_pts)
-    print convolved_function
+    '''
+    # Try adding another Gaussian to the.
+    convolving_term_2 = stats.norm(2.0,5.0)
 
+    for i,pt in enumerate(convolving_pts):
+        convolving_pts[i] += convolving_term_2.pdf(x[i])
+    '''
+
+    convolved_function = signal.convolve(y/y.sum(),convolving_pts)
+
+    # Have to carve out the middle of the curve, because
+    # the returned array has too many points in it. 
     znpts = len(convolved_function)
     begin = znpts/2 - npts/2
     end = znpts/2 + npts/2
@@ -59,8 +67,8 @@ def main():
     ############################################################################
     #subplot = fig1.add_subplot(1,1,1)
 
-    lo = -3
-    hi =  3
+    lo = -10
+    hi =  10
     npts = 1000
 
     ############################################################################
@@ -74,13 +82,18 @@ def main():
     gpts = rv.pdf(x)
     fig1.add_subplot(1,3,2)
     plt.plot(x,gpts,color='k')
+    norm_norm = gpts.sum()*(x[3]-x[2])
+    print norm_norm
 
     ############################################################################
     # Generate values drawn from a negative exponential
     ############################################################################
-    tau = 1.0
-    x_exp = np.linspace(0,5,npts)
-    exp_pts = np.exp(x_exp*(-tau))
+    tau = 1.0/1.547
+    x_exp = np.linspace(-10,10,npts)
+    exp_pts = np.exp(np.abs(x_exp)*(-tau))
+    exp_norm = exp_pts.sum()*(x_exp[3]-x_exp[2])
+    print exp_norm
+    exp_pts /= exp_norm
     fig1.add_subplot(1,3,3)
     plt.plot(x_exp,exp_pts,color='k')
 
@@ -88,7 +101,9 @@ def main():
     # Try the convolution
     ############################################################################
     conv_means = [0.0,0.0,-1.0]
-    conv_sigmas = [0.1,0.5,0.5]
+    conv_sigmas = [0.1,1.0,0.5]
+    #conv_means = [0.0]
+    #conv_sigmas = [1.0]
     colors = ['r','g','b']
     for cm,cs,color in zip(conv_means,conv_sigmas,colors):
         z,convpts = smear_with_gaussian_convolution(x,gpts,cm,cs)
