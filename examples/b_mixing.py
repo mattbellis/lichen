@@ -36,8 +36,8 @@ def main():
     ############################################################################
     # Generate values drawn from a normal (Gaussian) distribution.
     ############################################################################
-    deltat_min = -10
-    deltat_max =  10
+    deltat_min = -20
+    deltat_max =  20
     deltat_range =  deltat_max-deltat_min
 
     deltat_mc = []
@@ -73,15 +73,19 @@ def main():
     #'''
     events = [np.array([]),np.array([]),np.array([]),np.array([])]
     n=0
-    nevents = 100000
+    nevents = 10000
+    print "Generating %d events." % (nevents)
     while n<nevents:
+
+        if n%1000==0:
+            print n
 
         for i in range(0,4):
 
             q1 = charges[i][0]
             q2 = charges[i][1]
 
-            val = 20*np.random.rand()-10
+            val = deltat_range*np.random.rand()+deltat_min
 
             prob = pdfs.pdf_bmixing(val,[gamma,p_over_q,deltaM,deltaG,q1,q2])
 
@@ -92,8 +96,11 @@ def main():
                 n += 1
 
     for i in range(0,4):
-        subplots[1][i].hist(events[i],bins=50)
-        subplots[1][i].set_xlim(-10,10)
+        #subplots[1][i].hist(events[i],bins=50)
+        figs[1].add_subplot(2,2,i+1)
+        lch.hist_err(events[i],bins=50)
+        subplots[1][i].set_xlim(deltat_min,deltat_max)
+        subplots[1][i].set_ylim(0)
         #subplots[1][i].set_ylim(0,nevents/16)
 
     Npp = len(events[0])
