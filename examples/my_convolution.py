@@ -45,6 +45,42 @@ def smear_with_gaussian_convolution(x,y,mean,sigma):
 
     return convolved_function[begin:end],convolving_pts
 
+
+################################################################################
+def my_smear_with_gaussian_convolution(x,y,mean,sigma):
+
+    npts = len(x)
+
+    convolving_term = stats.norm(mean,sigma)
+    convolving_pts = convolving_term.pdf(x)
+
+    convolved_function = np.array([])
+
+    for i in range(0,npts):
+        convolved_function = np.append(convolved_function,0.0)
+        for j in range(0,npts,10):
+
+            convolved_function[i] += y[j]*convolving_term.pdf(x[i]-x[j])
+
+            j+=0.5
+
+
+    # Have to carve out the middle of the curve, because
+    # the returned array has too many points in it. 
+    znpts = len(convolved_function)
+    begin = znpts/2 - npts/2
+    end = znpts/2 + npts/2
+
+    print "%d %d %d %d" % (npts,znpts,begin,end)
+
+    normalization =  convolved_function.sum()*(x[3]-x[2])
+    
+    ret =  convolved_function[begin:end]/normalization
+
+    #print convolved_function[begin:end]
+    return ret,convolving_pts
+
+
 ################################################################################
 # main
 ################################################################################
@@ -106,7 +142,7 @@ def main():
     conv_sigmas = [1.0]
     colors = ['r','g','b']
     for cm,cs,color in zip(conv_means,conv_sigmas,colors):
-        z,convpts = smear_with_gaussian_convolution(x,gpts,cm,cs)
+        z,convpts = my_smear_with_gaussian_convolution(x,gpts,cm,cs)
         fig1.add_subplot(1,3,1)
         plt.plot(x,convpts,color=color)
 
@@ -114,7 +150,11 @@ def main():
         plt.plot(x,z,color=color)
 
         # Exponential
-        z,convpts = smear_with_gaussian_convolution(x,exp_pts,cm,cs)
+        z,convpts = my_smear_with_gaussian_convolution(x,exp_pts,cm,cs)
+
+        #z_norm = z.sum()*(x_exp[3]-x_exp[2])
+        #print z_norm
+        #z /= z_norm
 
         fig1.add_subplot(1,3,3)
         plt.plot(x_exp,z,color=color)
