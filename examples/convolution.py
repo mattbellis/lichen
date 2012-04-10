@@ -108,7 +108,7 @@ def main():
     for cm,cs,color in zip(conv_means,conv_sigmas,colors):
         z,convpts = smear_with_gaussian_convolution(x,gpts,cm,cs)
         fig1.add_subplot(1,3,1)
-        plt.plot(x,convpts)
+        plt.plot(x,convpts,color=color)
 
         fig1.add_subplot(1,3,2)
         plt.plot(x,z,color=color)
