@@ -78,7 +78,7 @@ def extended_maximum_likelihood_function(p, x, y):
         #print (-np.log(pdf_bmixing(x[i],pars) / norm_func).sum()) 
         #print pois(num,len(x[i]))
 
-        ret = (-np.log(pdf_bmixing(x[i],pars) / norm_func).sum()) - pois(num,len(x[i]))
+        ret += (-np.log(pdf_bmixing(x[i],pars) / norm_func).sum()) - pois(num,len(x[i]))
 
         #print "%f  %f" % (ret, norm_func)
     return ret
