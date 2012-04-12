@@ -10,6 +10,7 @@
 ################################################################################
 # Import the standard libraries in the accepted fashion.
 ################################################################################
+import math
 from math import *
 import numpy as np
 import matplotlib.pyplot as plt
@@ -80,6 +81,56 @@ def my_smear_with_gaussian_convolution(x,y,mean,sigma):
     #print convolved_function[begin:end]
     return ret,convolving_pts
 
+################################################################################
+def my_smear_with_gaussian_convolution_analytic(x,tau,mean,sigma):
+
+    npts = len(x)
+
+    tau = 1.0/tau
+
+    y = np.array([])
+
+    sigma_squared = sigma*sigma
+    tau_squared = tau*tau
+    tau_sigma = tau*sigma
+    const0 = np.sqrt(np.pi/2.0)*sigma
+    const1 = np.exp((sigma_squared-2*mean*tau)/(2*tau_squared))
+
+    for pt in x:
+        abspt = np.abs(pt)
+        #abspt = pt
+        #val = const0*const1
+        #val *= math.erf((sigma_squared+(tau*(pt-mean))/(np.sqrt(2)*tau_sigma)))
+        val = const0
+        val *= np.exp((sigma_squared-2*tau*(mean+abspt))/(2*tau_squared))
+        #val *= -np.exp(-abspt/tau)
+        #print (math.erf((mean-pt-10)/(np.sqrt(2)*sigma)) - math.erf((mean-pt+10)/(np.sqrt(2)*sigma)))
+        #val *= (math.erf((mean-pt-10)/(np.sqrt(2)*sigma)) - math.erf((mean-pt+10)/(np.sqrt(2)*sigma)))
+        #val *= (math.erf(mean/(np.sqrt(2)*sigma)) - math.erf((pt+mean)/(np.sqrt(2)*sigma)))
+        #val *= -(1 - math.erf((mean-abspt)/(np.sqrt(2)*sigma)))
+        #val *= -math.erf((sigma_squared-tau*(mean+pt))/(np.sqrt(2)*sigma*tau))
+        #'''
+        if pt>0:
+            val *= (1 - math.erf((sigma_squared-tau*(mean+pt))/(np.sqrt(2)*sigma*tau)))
+            #val *= -math.erf((sigma_squared+tau*(mean+pt))/(np.sqrt(2)*sigma*tau))
+        else:
+            val *= (1 + math.erf((sigma_squared+tau*(mean+pt))/(np.sqrt(2)*sigma*tau)))
+            #val *= math.erf((sigma_squared+tau*(mean+pt))/(np.sqrt(2)*sigma*tau))
+        #'''
+        '''
+        if pt>0:
+            val *= (math.erf((mean-pt)/(np.sqrt(2)*sigma)) - 1)
+        else:
+            val *= -(1+math.erf((mean-pt)/(np.sqrt(2)*sigma)))
+        '''
+
+        print "pt: %f %f %f %f" % (pt,const0,const1,val)
+
+        y = np.append(y,val)
+
+    #print convolved_function[begin:end]
+    return y
+
 
 ################################################################################
 # main
@@ -142,22 +193,22 @@ def main():
     conv_sigmas = [1.0]
     colors = ['r','g','b']
     for cm,cs,color in zip(conv_means,conv_sigmas,colors):
-        z,convpts = my_smear_with_gaussian_convolution(x,gpts,cm,cs)
-        fig1.add_subplot(1,3,1)
-        plt.plot(x,convpts,color=color)
 
-        fig1.add_subplot(1,3,2)
-        plt.plot(x,z,color=color)
+        #z,convpts = my_smear_with_gaussian_convolution(x,gpts,cm,cs)
+        #fig1.add_subplot(1,3,1)
+        #plt.plot(x,convpts,color=color)
+
+        #fig1.add_subplot(1,3,2)
+        #plt.plot(x,z,color=color)
 
         # Exponential
-        z,convpts = my_smear_with_gaussian_convolution(x,exp_pts,cm,cs)
+        #z,convpts = my_smear_with_gaussian_convolution(x,exp_pts,cm,cs)
 
-        #z_norm = z.sum()*(x_exp[3]-x_exp[2])
-        #print z_norm
-        #z /= z_norm
+        z_ana = my_smear_with_gaussian_convolution_analytic(x_exp,tau,cm,cs)
 
         fig1.add_subplot(1,3,3)
-        plt.plot(x_exp,z,color=color)
+        #plt.plot(x_exp,z,color=color)
+        plt.plot(x_exp,z_ana,color='c')
         #plt.set_xlim(0,5)
 
     # Need this command to display the figure.
