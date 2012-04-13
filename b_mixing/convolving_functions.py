@@ -4,10 +4,6 @@
 # http://glowingpython.blogspot.com/2012/02/convolution-with-numpy.html
 
 ################################################################################
-# Make a histogram and plot it on a figure (TCanvas).
-################################################################################
-
-################################################################################
 # Import the standard libraries in the accepted fashion.
 ################################################################################
 import math
@@ -19,6 +15,7 @@ import matplotlib.mlab as mlab
 import scipy.stats as stats
 import scipy.signal as signal
 
+################################################################################
 def smear_with_gaussian_convolution(x,y,mean,sigma):
 
     npts = len(x)
@@ -95,6 +92,7 @@ def my_smear_with_gaussian_convolution_analytic(x,tau,mean,sigma):
     tau_sigma = tau*sigma
     const0 = np.sqrt(np.pi/2.0)*sigma
     const1 = np.exp((sigma_squared-2*mean*tau)/(2*tau_squared))
+    const2 = (np.sqrt(2)*sigma*tau)
 
     for pt in x:
         abspt = np.abs(pt)
@@ -109,8 +107,10 @@ def my_smear_with_gaussian_convolution_analytic(x,tau,mean,sigma):
         #val *= (math.erf((mean-pt-10)/(np.sqrt(2)*sigma)) - math.erf((mean-pt+10)/(np.sqrt(2)*sigma)))
         #val *= (math.erf(mean/(np.sqrt(2)*sigma)) - math.erf((pt+mean)/(np.sqrt(2)*sigma)))
         #val *= -(1 - math.erf((mean-abspt)/(np.sqrt(2)*sigma)))
-        #val *= -math.erf((sigma_squared-tau*(mean+pt))/(np.sqrt(2)*sigma*tau))
-        #val *=  math.erf((sigma_squared+tau*(mean-10.0))/(np.sqrt(2)*sigma*tau))
+        '''
+        val *= ((math.erf((sigma_squared+(tau*mean)))/const2) -
+               (math.erf((sigma_squared+(tau*(mean-abspt)))/const2)) )
+        '''
         '''
         if pt>0:
             val *=  math.erfc((sigma_squared-tau*(mean+pt))/(np.sqrt(2)*sigma*tau))
@@ -135,89 +135,129 @@ def my_smear_with_gaussian_convolution_analytic(x,tau,mean,sigma):
 
 
 ################################################################################
-# main
+def my_smear_with_gaussian_convolution_numerical(x,tau,mean,sigma):
+
+    npts = len(x)
+
+    #tau = 1.0/tau
+
+    y = np.array([])
+
+    window = 3*sigma
+    nwindow = 500
+
+    for pt in x:
+
+        temp_pts = np.linspace(pt-window,pt+window,nwindow)
+        convolving_term = stats.norm(mean,sigma)
+        val = (np.exp(-abs(temp_pts)*tau)*convolving_term.pdf(pt-temp_pts)).sum()
+        #val = np.exp(-np.abs(pt)*tau)
+
+        y = np.append(y,val)
+
+
+    normalization =  y.sum()*(x[3]-x[2])
+
+    return y/normalization
+
 ################################################################################
-def main():
+def my_smear_with_gaussian_convolution_numerical_per_event_errors(x,tau,mean,sigma):
+
+
+    npts = len(x)
+
+    #tau = 1.0/tau
+
+    y = np.array([])
+
+    nwindow = 100
+
+    for pt,sig in zip(x,sigma):
+
+        window = 4*sig
+        #print sig
+
+        temp_pts = np.linspace(pt-window,pt+window,nwindow)
+        convolving_term = stats.norm(mean,sig)
+        val = (np.exp(-abs(temp_pts)*tau)*convolving_term.pdf(pt-temp_pts)).sum() #/np.exp(-abs(temp_pts)*tau).sum()
+
+        #val = np.exp(-np.abs(pt)*tau)
+
+        #print "%f %f" % (sig,val)
+
+        y = np.append(y,val)
+
+
+    normalization = 1.0
+    if len(x)>3:
+        normalization = y.sum()*(x[3]-x[2])
+    print "norm: %f" % (normalization)
+
+    return y/normalization
+
+
+################################################################################
+def my_smear_with_gaussian_convolution_numerical_per_event_errors_pdf(x,tau,mean,sigma):
+
+
+    y = np.array([])
+
+    nwindow = 100
+
+    pt = x
+    sig = sigma
+
+    window = 4*sig
+    #print sig
+
+    temp_pts = np.linspace(pt-window,pt+window,nwindow)
+    convolving_term = stats.norm(mean,sig)
+    val = (np.exp(-abs(temp_pts)*tau)*convolving_term.pdf(pt-temp_pts)).sum() #/np.exp(-abs(temp_pts)*tau).sum()
+    #print convolving_term.pdf(pt-temp_pts)
+    #print val
+
+    #val = np.exp(-np.abs(pt)*tau)
+    #print "%f %f" % (sig,val)
+
+    y = np.append(y,val)
+
+    normalization = 1.0
+    #print "norm: %f" % (normalization)
+
+    return y/normalization
+
+################################################################################
+def triple_gaussian_convolution_per_event_errors_pdf(x,tau,mean,sigma):
+
+
+    y = np.array([])
+
+    nwindow = 400
+
+    pt = x
+    sig = sigma
+
+    window = 32*sig
+    #print sig
+
+    temp_pts = np.linspace(pt-window,pt+window,nwindow)
+    temp_pts2 = pt - np.linspace(pt-window,pt+window,nwindow)
     
-    ############################################################################
-    # Make a figure on which to plot stuff.
-    # This would be the same as making a TCanvas object.
-    ############################################################################
-    fig1 = plt.figure(figsize=(12,4),dpi=100,facecolor='w',edgecolor='k')
+    g0 = stats.norm(mean,1.0*sig)
+    g1 = stats.norm(mean,2.0*sig)
+    g2 = stats.norm(mean,8.0*sig)
 
-    ############################################################################
-    # Now divide of the figure as if we were making a bunch of TPad objects.
-    # These are called ``subplots".
-    #
-    # Usage is XYZ: X=how many rows to divide.
-    #               Y=how many columns to divide.
-    #               Z=which plot to plot based on the first being '1'.
-    # So '111' is just one plot on the main figure.
-    ############################################################################
-    #subplot = fig1.add_subplot(1,1,1)
+    val = (np.exp(-abs(temp_pts)*tau)*(g0.pdf(temp_pts2)+0.10*g1.pdf(temp_pts2)+0.20*g2.pdf(temp_pts2))).sum() 
+    
+    #print val
 
-    lo = -10
-    hi =  10
-    npts = 1000
+    #val = np.exp(-np.abs(pt)*tau)
+    #print "%f %f" % (sig,val)
 
-    ############################################################################
-    # Generate values drawn from a normal (Gaussian) distribution.
-    ############################################################################
-    mean = 0.0
-    sigma = 0.5
-    rv = stats.norm(mean,sigma)
-    x = np.linspace(lo,hi,npts)
-    #print x
-    gpts = rv.pdf(x)
-    fig1.add_subplot(1,3,2)
-    plt.plot(x,gpts,color='k')
-    norm_norm = gpts.sum()*(x[3]-x[2])
-    print norm_norm
+    y = np.append(y,val)
 
-    ############################################################################
-    # Generate values drawn from a negative exponential
-    ############################################################################
-    tau = 1.0/1.547
-    x_exp = np.linspace(-10,10,npts)
-    exp_pts = np.exp(np.abs(x_exp)*(-tau))
-    exp_norm = exp_pts.sum()*(x_exp[3]-x_exp[2])
-    print exp_norm
-    exp_pts /= exp_norm
-    fig1.add_subplot(1,3,3)
-    plt.plot(x_exp,exp_pts,color='k')
+    normalization = 1.0
+    #print "norm: %f" % (normalization)
 
-    ############################################################################
-    # Try the convolution
-    ############################################################################
-    #conv_means = [0.0,0.0,-1.0]
-    #conv_sigmas = [0.1,1.0,0.5]
-    conv_means = [0.0]
-    conv_sigmas = [1.0]
-    colors = ['r','g','b']
-    for cm,cs,color in zip(conv_means,conv_sigmas,colors):
+    return y/normalization
 
-        #z,convpts = my_smear_with_gaussian_convolution(x,gpts,cm,cs)
-        #fig1.add_subplot(1,3,1)
-        #plt.plot(x,convpts,color=color)
-
-        #fig1.add_subplot(1,3,2)
-        #plt.plot(x,z,color=color)
-
-        # Exponential
-        #z,convpts = my_smear_with_gaussian_convolution(x,exp_pts,cm,cs)
-
-        z_ana = my_smear_with_gaussian_convolution_analytic(x_exp,tau,cm,cs)
-
-        fig1.add_subplot(1,3,3)
-        #plt.plot(x_exp,z,color=color)
-        plt.plot(x_exp,z_ana,color='c')
-        #plt.set_xlim(0,5)
-
-    # Need this command to display the figure.
-    plt.show()
-
-################################################################################
-# Top-level script evironment
-################################################################################
-if __name__ == "__main__":
-    main()
