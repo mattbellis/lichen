@@ -102,21 +102,23 @@ def my_smear_with_gaussian_convolution_analytic(x,tau,mean,sigma):
         #val = const0*const1
         #val *= math.erf((sigma_squared+(tau*(pt-mean))/(np.sqrt(2)*tau_sigma)))
         val = const0
-        val *= np.exp((sigma_squared-2*tau*(mean+abspt))/(2*tau_squared))
+        val *= np.exp((sigma_squared+2*tau*(mean-abspt))/(2*tau_squared))
+        #val *= np.exp((sigma_squared-2*tau*(mean+abspt))/(2*tau_squared))
         #val *= -np.exp(-abspt/tau)
         #print (math.erf((mean-pt-10)/(np.sqrt(2)*sigma)) - math.erf((mean-pt+10)/(np.sqrt(2)*sigma)))
         #val *= (math.erf((mean-pt-10)/(np.sqrt(2)*sigma)) - math.erf((mean-pt+10)/(np.sqrt(2)*sigma)))
         #val *= (math.erf(mean/(np.sqrt(2)*sigma)) - math.erf((pt+mean)/(np.sqrt(2)*sigma)))
         #val *= -(1 - math.erf((mean-abspt)/(np.sqrt(2)*sigma)))
         #val *= -math.erf((sigma_squared-tau*(mean+pt))/(np.sqrt(2)*sigma*tau))
-        #'''
+        #val *=  math.erf((sigma_squared+tau*(mean-10.0))/(np.sqrt(2)*sigma*tau))
+        '''
         if pt>0:
-            val *= (1 - math.erf((sigma_squared-tau*(mean+pt))/(np.sqrt(2)*sigma*tau)))
+            val *=  math.erfc((sigma_squared-tau*(mean+pt))/(np.sqrt(2)*sigma*tau))
             #val *= -math.erf((sigma_squared+tau*(mean+pt))/(np.sqrt(2)*sigma*tau))
         else:
-            val *= (1 + math.erf((sigma_squared+tau*(mean+pt))/(np.sqrt(2)*sigma*tau)))
+            val *=  math.erfc((sigma_squared-tau*(mean+pt))/(np.sqrt(2)*sigma*tau))
             #val *= math.erf((sigma_squared+tau*(mean+pt))/(np.sqrt(2)*sigma*tau))
-        #'''
+        '''
         '''
         if pt>0:
             val *= (math.erf((mean-pt)/(np.sqrt(2)*sigma)) - 1)
