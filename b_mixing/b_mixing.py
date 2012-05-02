@@ -36,7 +36,8 @@ def main():
     ############################################################################
     # Generate values drawn from a normal (Gaussian) distribution.
     ############################################################################
-    deltat_min = -20
+    #deltat_min = -20
+    deltat_min = 0
     deltat_max =  20
     deltat_range =  deltat_max-deltat_min
 
@@ -73,7 +74,7 @@ def main():
     #'''
     events = [np.array([]),np.array([]),np.array([]),np.array([])]
     n=0
-    nevents = 10000
+    nevents = 1000
     print "Generating %d events." % (nevents)
     while n<nevents:
 
@@ -120,6 +121,7 @@ def main():
     print "Acp: %f" % (Acp)
     #'''
 
+    '''
     # Fit function.
     gamma = 1.0/1.547
     p_over_q = 1.01
@@ -136,7 +138,27 @@ def main():
     p1 = sp.optimize.fmin(pdfs.extended_maximum_likelihood_function,p0,args=(events,deltat_mc), maxiter=10000, maxfun=10000)
 
     print p1
+    '''
 
+    f0 = plt.figure(figsize=(8,6),dpi=100,facecolor='w',edgecolor='k')
+    s0 = f0.add_subplot(1,1,1) 
+    f0.subplots_adjust(wspace=0.4,hspace=0.4,bottom=0.2)
+
+    lch.hist_err(events[0],bins=50)
+    s0.set_xlim(deltat_min,deltat_max)
+    s0.set_ylim(0)
+    s0.set_xlabel(r"$\Delta t (ps)$",fontsize=40)
+    s0.set_ylabel(r"# events",fontsize=40)
+
+    f1 = plt.figure(figsize=(8,6),dpi=100,facecolor='w',edgecolor='k')
+    s1 = f1.add_subplot(1,1,1) 
+    f1.subplots_adjust(wspace=0.4,hspace=0.4,bottom=0.2)
+
+    lch.hist_err(events[2],bins=50)
+    s1.set_xlim(deltat_min,deltat_max)
+    s1.set_ylim(0)
+    s1.set_xlabel(r"$\Delta t (ps)$",fontsize=40)
+    s1.set_ylabel(r"# events",fontsize=40)
 
     # Need this command to display the figure.
     plt.show()
