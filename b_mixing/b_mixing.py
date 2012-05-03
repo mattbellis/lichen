@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
 ################################################################################
-# Make a histogram and plot it on a figure (TCanvas).
+# Define a data container
 ################################################################################
+
+data = []
 
 ################################################################################
 # Import the standard libraries in the accepted fashion.
@@ -15,6 +17,8 @@ import matplotlib.mlab as mlab
 
 import lichen.lichen as lch
 import lichen.pdfs as pdfs
+
+import minuit
 
 ################################################################################
 # main
@@ -73,7 +77,7 @@ def main():
     #'''
     events = [np.array([]),np.array([]),np.array([]),np.array([])]
     n=0
-    nevents = 10000
+    nevents = 1000
     print "Generating %d events." % (nevents)
     while n<nevents:
 
@@ -133,10 +137,14 @@ def main():
     n3 = Nmp
     p0 = [gamma,p_over_q,deltaM,deltaG,n0,n1,n2,n3]
     print p0
-    p1 = sp.optimize.fmin(pdfs.extended_maximum_likelihood_function,p0,args=(events,deltat_mc), maxiter=10000, maxfun=10000)
+    #p1 = sp.optimize.fmin(pdfs.extended_maximum_likelihood_function,p0,args=(events,deltat_mc), maxiter=10000, maxfun=10000)
 
-    print p1
+    #print p1
 
+    data = [events,deltat_mc]
+    m = minuit.Minuit(pdfs.extended_maximum_likelihood_function_minuit,p=p0)
+    print m.values
+    m.migrad()
 
     # Need this command to display the figure.
     plt.show()
