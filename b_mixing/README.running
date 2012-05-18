@@ -1,0 +1,13 @@
+################################################################################
+# A wrapper to scipy.signal.convolve
+################################################################################
+
+    python convolution.py
+
+Uses scipy.signal.convolve to do a standard convolution of a Gaussian and a 
+double exponential.
+
+
+
+
+
