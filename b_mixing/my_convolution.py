@@ -103,7 +103,7 @@ def main():
     print "Generating some events......"
     events = np.array([])
     errs = np.array([])
-    nevents = 100000
+    nevents = 10000
     zero = np.array([0.0])
     #max_val = my_smear_with_gaussian_convolution_numerical_per_event_errors_pdf(0.0,tau,0.0,1.0)
     max_val = triple_gaussian_convolution_per_event_errors_pdf(0.0,tau,0.0,1.0)
@@ -112,6 +112,10 @@ def main():
     #exit(-1)
     i=0
     while i<nevents:
+
+        if (i%100==0):
+            print i
+        
 
         x = 20*np.random.rand() - 10.0
         cs = 0.1*np.random.rand() + 1.0

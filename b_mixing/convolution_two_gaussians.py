@@ -18,6 +18,9 @@ import matplotlib.mlab as mlab
 import scipy.stats as stats
 import scipy.signal as signal
 
+################################################################################
+# A wrapper to scipy.signal.convolve
+################################################################################
 def smear_with_gaussian_convolution(x,y,mean,sigma):
 
     npts = len(x)
@@ -26,12 +29,12 @@ def smear_with_gaussian_convolution(x,y,mean,sigma):
     convolving_pts = convolving_term.pdf(x)
 
     # Try adding another Gaussian to the.
-    convolving_term_2 = stats.norm(2.0,5.0)
+    convolving_term_2 = stats.norm(0.0,5.0)
 
     for i,pt in enumerate(convolving_pts):
-        convolving_pts[i] += convolving_term_2.pdf(x[i])
+        convolving_pts[i] += 1.0*convolving_term_2.pdf(x[i])
 
-    convolving_pts[i] /= 2.0
+    convolving_pts /= 2.0
 
     convolved_function = signal.convolve(y/y.sum(),convolving_pts)
 
@@ -55,18 +58,11 @@ def main():
     # This would be the same as making a TCanvas object.
     ############################################################################
     fig1 = plt.figure(figsize=(12,4),dpi=100,facecolor='w',edgecolor='k')
+    subplots = [None,None,None]
 
     ############################################################################
-    # Now divide of the figure as if we were making a bunch of TPad objects.
-    # These are called ``subplots".
-    #
-    # Usage is XYZ: X=how many rows to divide.
-    #               Y=how many columns to divide.
-    #               Z=which plot to plot based on the first being '1'.
-    # So '111' is just one plot on the main figure.
+    # The range of the plotting functions.
     ############################################################################
-    #subplot = fig1.add_subplot(1,1,1)
-
     lo = -10
     hi =  10
     npts = 1000
@@ -80,8 +76,9 @@ def main():
     x = np.linspace(lo,hi,npts)
     #print x
     gpts = rv.pdf(x)
-    fig1.add_subplot(1,3,2)
-    plt.plot(x,gpts,color='k')
+    subplots[1] = fig1.add_subplot(1,3,2)
+    subplots[1].set_title('Gaussian')
+    porg0 = subplots[1].plot(x,gpts,color='k',label='original')
     norm_norm = gpts.sum()*(x[3]-x[2])
     print norm_norm
 
@@ -89,38 +86,44 @@ def main():
     # Generate values drawn from a negative exponential
     ############################################################################
     tau = 1.0/1.547
-    x_exp = np.linspace(-10,10,npts)
+    x_exp = np.linspace(lo,hi,npts)
     exp_pts = np.exp(np.abs(x_exp)*(-tau))
     exp_norm = exp_pts.sum()*(x_exp[3]-x_exp[2])
     print exp_norm
     exp_pts /= exp_norm
-    fig1.add_subplot(1,3,3)
-    plt.plot(x_exp,exp_pts,color='k')
+    subplots[2] = fig1.add_subplot(1,3,3)
+    subplots[2].set_title('Double exponential')
+    porg1 = subplots[2].plot(x_exp,exp_pts,color='k',label='original')
 
     ############################################################################
     # Try the convolution
     ############################################################################
-    conv_means = [0.0,2.0]
-    conv_sigmas = [1.0,5.0]
-    #conv_means = [0.0]
-    #conv_sigmas = [1.0]
-    colors = ['r','g']
+    #conv_means = [0.0,0.0,-1.0]
+    #conv_sigmas = [0.1,1.0,0.5]
+    conv_means = [0.0]
+    conv_sigmas = [1.0]
+    colors = ['r','g','b']
     for cm,cs,color in zip(conv_means,conv_sigmas,colors):
         z,convpts = smear_with_gaussian_convolution(x,gpts,cm,cs)
-        fig1.add_subplot(1,3,1)
-        plt.plot(x,convpts,color=color)
+        subplots[0] = fig1.add_subplot(1,3,1)
+        subplots[0].set_title('Convolving function')
+        subplots[0].plot(x,convpts,color=color)
 
         fig1.add_subplot(1,3,2)
-        plt.plot(x,z,color=color)
+        pconv0 = subplots[1].plot(x,z,color=color,label='convolved')
+        subplots[1].set_ylim(0,1.1)
+        subplots[1].legend(loc=0)
 
         # Exponential
         z,convpts = smear_with_gaussian_convolution(x,exp_pts,cm,cs)
 
         fig1.add_subplot(1,3,3)
-        plt.plot(x_exp,z,color=color)
-        #plt.set_xlim(0,5)
+        pconv1 = subplots[2].plot(x_exp,z,color=color,label='convolved')
+        subplots[2].set_ylim(0,0.45)
+        subplots[2].legend(loc=0)
 
     # Need this command to display the figure.
+    fig1.subplots_adjust(left=0.05, bottom=None, right=0.95, wspace=0.2, hspace=None)
     plt.show()
 
 ################################################################################

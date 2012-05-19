@@ -78,7 +78,7 @@ def main():
     # Generate values drawn from a negative exponential
     ############################################################################
     tau = 1.0/1.547
-    x_exp = np.linspace(-10,10,npts)
+    x_exp = np.linspace(lo,hi,npts)
     exp_pts = np.exp(np.abs(x_exp)*(-tau))
     exp_norm = exp_pts.sum()*(x_exp[3]-x_exp[2])
     print exp_norm
