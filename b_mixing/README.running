@@ -8,6 +8,10 @@ Uses scipy.signal.convolve to do a standard convolution of a Gaussian and a
 double exponential.
 
 
+    python convolution_two_gaussians.py
+
+Same thing, but uses two Gaussians. Compares to ROOT/RooFit example
+rf209_anaconv.C
 
 
 
