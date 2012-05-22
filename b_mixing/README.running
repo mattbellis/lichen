@@ -7,18 +7,13 @@
 Uses scipy.signal.convolve to do a standard convolution of a Gaussian and a 
 double exponential.
 
+Does this for both one and two Gaussians, but can do n-Gaussians if needs be. 
 
-    python convolution_two_gaussians.py
+Compares to ROOT/RooFit example rf209_anaconv.C
 
-Same thing, but uses two Gaussians. Compares to ROOT/RooFit example
-rf209_anaconv.C
+Example also demonstrates my numerical version and shows difference between
+the two.
 
 
-
-################################################################################
-# Compare scipy.signal.convolve with my numerical calculation.
-################################################################################
-
-python convolution_numerical.py
 
 

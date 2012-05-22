@@ -64,6 +64,7 @@ def main():
     x = np.linspace(lo,hi,npts)
 
     xerr = np.random.normal(1.0,0.25,npts)
+    #xerr = 0.5*np.random.random(npts) + 1
 
     ############################################################################
     # Generate values drawn from a negative exponential
