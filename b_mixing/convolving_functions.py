@@ -16,6 +16,91 @@ import scipy.stats as stats
 import scipy.signal as signal
 
 ################################################################################
+# A wrapper to scipy.signal.convolve
+################################################################################
+def convolve_func_with_gaussian(x,y,mean=0.0,sigma=1.0):
+
+    # x is x-values of function.
+    # y is y-values of function.
+
+    npts = len(x)
+
+    convolving_term = stats.norm(mean,sigma)
+    convolving_pts = convolving_term.pdf(x)
+
+    convolved_function = signal.convolve(y/y.sum(),convolving_pts)
+
+    # Have to carve out the middle of the curve, because
+    # the returned array has too many points in it. 
+    znpts = len(convolved_function)
+    begin = znpts/2 - npts/2
+    end = znpts/2 + npts/2
+
+    #print "%d %d %d %d" % (npts,znpts,begin,end)
+
+    return convolved_function[begin:end],convolving_pts
+
+################################################################################
+# A wrapper to scipy.signal.convolve
+################################################################################
+def convolve_func_with_two_gaussian(x,y,mean=[0.0],sigma=[1.0],fractions=[1.0]):
+
+    npts = len(x)
+    ngaussians = len(mean)
+
+    convolving_pts = np.zeros(npts)
+
+    for i in range(0,ngaussians):
+
+        convolving_term = stats.norm(mean[i],sigma[i])
+        convolving_pts += fractions[i]*convolving_term.pdf(x)
+
+    # Normalize
+    convolving_pts /= sum(fractions)
+
+    convolved_function = signal.convolve(y/y.sum(),convolving_pts)
+
+    # Have to carve out the middle of the curve, because
+    # the returned array has too many points in it. 
+    znpts = len(convolved_function)
+    begin = znpts/2 - npts/2
+    end = znpts/2 + npts/2
+
+    #print "%d %d %d %d" % (npts,znpts,begin,end)
+
+    return convolved_function[begin:end],convolving_pts
+
+################################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################
 def smear_with_gaussian_convolution(x,y,mean,sigma):
 
     npts = len(x)

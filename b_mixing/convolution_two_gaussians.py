@@ -18,6 +18,8 @@ import matplotlib.mlab as mlab
 import scipy.stats as stats
 import scipy.signal as signal
 
+from convolving_functions import *
+
 ################################################################################
 # A wrapper to scipy.signal.convolve
 ################################################################################
@@ -104,7 +106,7 @@ def main():
     conv_sigmas = [1.0]
     colors = ['r','g','b']
     for cm,cs,color in zip(conv_means,conv_sigmas,colors):
-        z,convpts = smear_with_gaussian_convolution(x,gpts,cm,cs)
+        z,convpts = convolve_func_with_two_gaussian(x,gpts,[cm,0.0],[cs,5.0],[1.0,1.0])
         subplots[0] = fig1.add_subplot(1,3,1)
         subplots[0].set_title('Convolving function')
         subplots[0].plot(x,convpts,color=color)
@@ -115,7 +117,7 @@ def main():
         subplots[1].legend(loc=0)
 
         # Exponential
-        z,convpts = smear_with_gaussian_convolution(x,exp_pts,cm,cs)
+        z,convpts = convolve_func_with_two_gaussian(x,exp_pts,[cm,0.0],[cs,5.0],[1.0,1.0])
 
         fig1.add_subplot(1,3,3)
         pconv1 = subplots[2].plot(x_exp,z,color=color,label='convolved')

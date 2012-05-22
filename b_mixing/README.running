@@ -15,3 +15,10 @@ rf209_anaconv.C
 
 
 
+################################################################################
+# Compare scipy.signal.convolve with my numerical calculation.
+################################################################################
+
+python convolution_numerical.py
+
+
