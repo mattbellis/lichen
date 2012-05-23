@@ -31,7 +31,7 @@ def main():
     ############################################################################
     figs = []
     subplots = []
-    for i in xrange(2):
+    for i in xrange(1):
         figs.append(plt.figure(figsize=(8,6),dpi=100,facecolor='w',edgecolor='k'))
         subplots.append([])
         for j in range(0,4):
@@ -40,8 +40,8 @@ def main():
     ############################################################################
     # Generate values drawn from a normal (Gaussian) distribution.
     ############################################################################
-    deltat_min = -100
-    deltat_max =  100
+    deltat_min = -20
+    deltat_max =  20
     deltat_range =  deltat_max-deltat_min
 
     deltat_mc = []
@@ -52,8 +52,7 @@ def main():
 
     deltat = np.linspace(deltat_min,deltat_max,1000)
 
-    #gamma = 1.0/1.547
-    gamma = 1.0/10.547
+    gamma = 1.0/1.547
     p_over_q = 1.01
     A = 1.0
     deltaM = 0.4
@@ -75,10 +74,10 @@ def main():
 
     max_prob = max(maxes)
 
-    #'''
+    '''
     events = [np.array([]),np.array([]),np.array([]),np.array([])]
     n=0
-    nevents = 1000
+    nevents = 100
     print "Generating %d events." % (nevents)
     while n<nevents:
 
@@ -99,8 +98,6 @@ def main():
             if test<prob:
                 events[i] = np.append(events[i],val)
                 n += 1
-
-            subplots[0][i].set_xlim(0)
 
     for i in range(0,4):
         #subplots[1][i].hist(events[i],bins=50)
@@ -125,8 +122,9 @@ def main():
     Acp = 2*(1-np.abs(1.0/p_over_q))
 
     print "Acp: %f" % (Acp)
-    #'''
+    '''
 
+    '''
     # Fit function.
     gamma = 1.0/1.547
     p_over_q = 1.01
@@ -144,10 +142,11 @@ def main():
 
     #print p1
 
-    data = [events,deltat_mc]
-    m = minuit.Minuit(pdfs.extended_maximum_likelihood_function_minuit,p=p0)
-    print m.values
-    m.migrad()
+    #data = [events,deltat_mc]
+    #m = minuit.Minuit(pdfs.extended_maximum_likelihood_function_minuit,p=p0)
+    #print m.values
+    #m.migrad()
+    '''
 
     # Need this command to display the figure.
     plt.show()
