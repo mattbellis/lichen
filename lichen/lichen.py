@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from scipy import optimize
 
 ################################################################################
-def hist_err(values,bins=100,range=None,fmt='o',color='blue',ecolor='black'):
+def hist_err(values,bins=100,range=None,fmt='o',color='blue',ecolor='black',axes=None):
 
     nentries_per_bin, bin_edges, patches = plt.hist(values,bins=bins,
             range=range,alpha=0.0) # Make histogram transparent.
@@ -21,7 +21,11 @@ def hist_err(values,bins=100,range=None,fmt='o',color='blue',ecolor='black'):
                                          # of an array. We'll assume Gaussian
                                          # errors here.
 
-    ret = plt.errorbar(xpts, ypts, xerr=xpts_err, yerr=ypts_err,fmt=fmt,
+    # If no axes are passed in, use the current axes available to plt.
+    if axes==None:
+        axes=plt.gca()
+
+    ret = axes.errorbar(xpts, ypts, xerr=xpts_err, yerr=ypts_err,fmt=fmt,
             color=color,ecolor=ecolor)
 
     return ret,xpts,ypts,xpts_err,ypts_err
