@@ -31,7 +31,7 @@ def main():
     ############################################################################
     figs = []
     subplots = []
-    for i in xrange(2):
+    for i in xrange(1):
         figs.append(plt.figure(figsize=(8,6),dpi=100,facecolor='w',edgecolor='k'))
         subplots.append([])
         for j in range(0,4):
@@ -40,14 +40,8 @@ def main():
     ############################################################################
     # Generate values drawn from a normal (Gaussian) distribution.
     ############################################################################
-<<<<<<< HEAD
-    #deltat_min = -20
-    deltat_min = 0
+    deltat_min = -20
     deltat_max =  20
-=======
-    deltat_min = -100
-    deltat_max =  100
->>>>>>> 188c3ba5e96c5bf165488d665ae2b51d278b7574
     deltat_range =  deltat_max-deltat_min
 
     deltat_mc = []
@@ -58,8 +52,7 @@ def main():
 
     deltat = np.linspace(deltat_min,deltat_max,1000)
 
-    #gamma = 1.0/1.547
-    gamma = 1.0/10.547
+    gamma = 1.0/1.547
     p_over_q = 1.01
     A = 1.0
     deltaM = 0.4
@@ -81,10 +74,10 @@ def main():
 
     max_prob = max(maxes)
 
-    #'''
+    '''
     events = [np.array([]),np.array([]),np.array([]),np.array([])]
     n=0
-    nevents = 1000
+    nevents = 100
     print "Generating %d events." % (nevents)
     while n<nevents:
 
@@ -105,8 +98,6 @@ def main():
             if test<prob:
                 events[i] = np.append(events[i],val)
                 n += 1
-
-            subplots[0][i].set_xlim(0)
 
     for i in range(0,4):
         #subplots[1][i].hist(events[i],bins=50)
@@ -131,7 +122,7 @@ def main():
     Acp = 2*(1-np.abs(1.0/p_over_q))
 
     print "Acp: %f" % (Acp)
-    #'''
+    '''
 
     '''
     # Fit function.
@@ -149,37 +140,13 @@ def main():
     print p0
     #p1 = sp.optimize.fmin(pdfs.extended_maximum_likelihood_function,p0,args=(events,deltat_mc), maxiter=10000, maxfun=10000)
 
-<<<<<<< HEAD
-    print p1
-    '''
-
-    f0 = plt.figure(figsize=(8,6),dpi=100,facecolor='w',edgecolor='k')
-    s0 = f0.add_subplot(1,1,1) 
-    f0.subplots_adjust(wspace=0.4,hspace=0.4,bottom=0.2)
-
-    lch.hist_err(events[0],bins=50)
-    s0.set_xlim(deltat_min,deltat_max)
-    s0.set_ylim(0)
-    s0.set_xlabel(r"$\Delta t (ps)$",fontsize=40)
-    s0.set_ylabel(r"# events",fontsize=40)
-
-    f1 = plt.figure(figsize=(8,6),dpi=100,facecolor='w',edgecolor='k')
-    s1 = f1.add_subplot(1,1,1) 
-    f1.subplots_adjust(wspace=0.4,hspace=0.4,bottom=0.2)
-
-    lch.hist_err(events[2],bins=50)
-    s1.set_xlim(deltat_min,deltat_max)
-    s1.set_ylim(0)
-    s1.set_xlabel(r"$\Delta t (ps)$",fontsize=40)
-    s1.set_ylabel(r"# events",fontsize=40)
-=======
     #print p1
 
-    data = [events,deltat_mc]
-    m = minuit.Minuit(pdfs.extended_maximum_likelihood_function_minuit,p=p0)
-    print m.values
-    m.migrad()
->>>>>>> 188c3ba5e96c5bf165488d665ae2b51d278b7574
+    #data = [events,deltat_mc]
+    #m = minuit.Minuit(pdfs.extended_maximum_likelihood_function_minuit,p=p0)
+    #print m.values
+    #m.migrad()
+    '''
 
     # Need this command to display the figure.
     plt.show()

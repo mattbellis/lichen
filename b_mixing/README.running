@@ -1,0 +1,19 @@
+################################################################################
+# A wrapper to scipy.signal.convolve
+################################################################################
+
+    python convolution.py
+
+Uses scipy.signal.convolve to do a standard convolution of a Gaussian and a 
+double exponential.
+
+Does this for both one and two Gaussians, but can do n-Gaussians if needs be. 
+
+Compares to ROOT/RooFit example rf209_anaconv.C
+
+Example also demonstrates my numerical version and shows difference between
+the two.
+
+
+
+
