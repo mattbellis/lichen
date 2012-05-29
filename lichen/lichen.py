@@ -33,8 +33,17 @@ def hist_err(values,bins=100,range=None,fmt='o',color='blue',ecolor='black',mark
 ################################################################################
 def hist_2D(xvals,yvals,xbins=10,ybins=10,xrange=None,yrange=None,origin='lower',cmap=plt.cm.coolwarm,axes=None,aspect='auto'):
 
-    H,xedges,yedges = np.histogram2d(xvals,yvals,bins=[xbins,ybins],range=[xrange,yrange])
-    extent = [xedges[0], xedges[-1], yedges[0], yedges[-1] ]
+    # Note I am switching the expected order of xvals and yvals, following the 
+    # comment in the SciPy tutorial.
+    # ``Please note that the histogram does not follow the Cartesian convention 
+    # where x values are on the abcissa and y values on the ordinate axis. Rather, 
+    # x is histogrammed along the first dimension of the array (vertical), and y 
+    # along the second dimension of the array (horizontal). 
+    # This ensures compatibility with histogramdd.
+    #
+    # http://docs.scipy.org/doc/numpy/reference/generated/numpy.histogram2d.html
+    H,xedges,yedges = np.histogram2d(yvals,xvals,bins=[ybins,ybins],range=[yrange,xrange])
+    extent = [yedges[0], yedges[-1], xedges[0], xedges[-1]]
 
     # If no axes are passed in, use the current axes available to plt.
     if axes==None:
