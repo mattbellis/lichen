@@ -146,7 +146,7 @@ def convolve_b_mixing_with_gaussians_per_event_errors(x,xerr,tau,mean=[0.0],sigm
             m *= err
             s *= err
             convolving_term = stats.norm(m,s)
-            val += (pdfs.pdf_bmixing(deltat,[gamma,p_over_q,deltaM,deltaG,q1,q2])*tau)*f*convolving_term.pdf(pt-temp_pts)).sum() #/np.exp(-abs(temp_pts)*tau).sum()
+            #val += (pdfs.pdf_bmixing(deltat,[gamma,p_over_q,deltaM,deltaG,q1,q2])*tau)*f*convolving_term.pdf(pt-temp_pts)).sum() #/np.exp(-abs(temp_pts)*tau).sum()
             #print "val: ",val
 
         #y = np.append(y,val/sum(fractions))
