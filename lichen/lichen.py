@@ -31,7 +31,7 @@ def hist_err(values,bins=100,range=None,fmt='o',color='blue',ecolor='black',mark
     return ret,xpts,ypts,xpts_err,ypts_err
 
 ################################################################################
-def hist_2D(xvals,yvals,xbins=10,ybins=10,xrange=None,yrange=None,origin='lower',cmap=plt.cm.coolwarm,axes=None,aspect='auto'):
+def hist_2D(xvals,yvals,xbins=10,ybins=10,xrange=None,yrange=None,origin='lower',cmap=plt.cm.coolwarm,axes=None,aspect='auto',log=False):
 
     # Note I am switching the expected order of xvals and yvals, following the 
     # comment in the SciPy tutorial.
@@ -44,6 +44,9 @@ def hist_2D(xvals,yvals,xbins=10,ybins=10,xrange=None,yrange=None,origin='lower'
     # http://docs.scipy.org/doc/numpy/reference/generated/numpy.histogram2d.html
     H,xedges,yedges = np.histogram2d(yvals,xvals,bins=[ybins,ybins],range=[yrange,xrange])
     extent = [yedges[0], yedges[-1], xedges[0], xedges[-1]]
+
+    if log is True:
+        H = np.log10(H)
 
     # If no axes are passed in, use the current axes available to plt.
     if axes==None:
