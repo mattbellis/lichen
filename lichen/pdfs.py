@@ -9,15 +9,19 @@ import scipy.integrate as integrate
 ################################################################################
 def exp(x,slope,xlo,xhi,num_int_points=1000):
 
-    exp_func = stats.expon(loc=0.0,scale=slope)
+    #exp_func = stats.expon(loc=0.0,scale=slope)
+    exp_func = stats.expon(loc=0.0,scale=1.0)
 
     xnorm = np.linspace(xlo,xhi,num_int_points)
-    ynorm = exp_func.pdf(xnorm)
+    #ynorm = exp_func.pdf(slope*xnorm)
+    ynorm = np.exp(-slope*xnorm)
     normalization = integrate.simps(ynorm,x=xnorm)
+    #normalization = (exp_func.pdf(xlo)-exp_func.pdf(xhi))
     #normalization = 1.0
     #print "pdfs normalization: ",normalization
     
-    y = exp_func.pdf(x)/normalization
+    #y = exp_func.pdf(slope*x)/normalization
+    y = np.exp(-slope*x)/normalization
 
     return y
 
