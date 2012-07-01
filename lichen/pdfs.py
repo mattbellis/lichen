@@ -7,40 +7,44 @@ import scipy.integrate as integrate
 # Exponential 
 # The slope is interpreted a negative
 ################################################################################
-def exp(x,slope,xlo,xhi,num_int_points=1000):
-
-    #exp_func = stats.expon(loc=0.0,scale=slope)
-    exp_func = stats.expon(loc=0.0,scale=1.0)
+def exp(x,slope,xlo,xhi,efficiency=None,num_int_points=1000):
 
     xnorm = np.linspace(xlo,xhi,num_int_points)
-    #ynorm = exp_func.pdf(slope*xnorm)
     ynorm = np.exp(-slope*xnorm)
+
+    if efficiency!=None:
+        ynorm *= efficiency(xnorm)
+
     normalization = integrate.simps(ynorm,x=xnorm)
-    #normalization = (exp_func.pdf(xlo)-exp_func.pdf(xhi))
-    #normalization = 1.0
-    #print "pdfs normalization: ",normalization
     
-    #y = exp_func.pdf(slope*x)/normalization
     y = np.exp(-slope*x)/normalization
 
-    return y
+    if efficiency!=None:
+        y *= efficiency(x)
 
+    return y
 
 
 ################################################################################
 # Gaussian
 ################################################################################
-def gauss(x,mean,sigma,xlo,xhi,num_int_points=1000):
+def gauss(x,mean,sigma,xlo,xhi,efficiency=None,num_int_points=1000):
 
     gauss_func = stats.norm(loc=mean,scale=sigma)
 
     xnorm = np.linspace(xlo,xhi,num_int_points)
     ynorm = gauss_func.pdf(xnorm)
+
+    if efficiency!=None:
+        ynorm *= efficiency(xnorm)
+
     normalization = integrate.simps(ynorm,x=xnorm)
-    #normalization = 1.0
-    #print "pdfs normalization: ",normalization
     
     y = gauss_func.pdf(x)/normalization
+
+    if efficiency!=None:
+        y *= efficiency(x)
+
 
     return y
 
@@ -48,7 +52,7 @@ def gauss(x,mean,sigma,xlo,xhi,num_int_points=1000):
 ################################################################################
 # Polynomial
 ################################################################################
-def poly(x,constants,xlo,xhi,num_int_points=1000):
+def poly(x,constants,xlo,xhi,efficiency=None,num_int_points=1000):
 
     npts = len(x)
 
@@ -57,13 +61,18 @@ def poly(x,constants,xlo,xhi,num_int_points=1000):
     xnorm = np.linspace(xlo,xhi,num_int_points)
     ynorm = np.ones(num_int_points)
 
+    if efficiency!=None:
+        ynorm *= efficiency(xnorm)
+
     for i,c in enumerate(constants):
         poly += c*np.pow(x,(i+1))
         ynorm += c*np.pow(xnorm,(i+1))
 
     normalization = integrate.simps(ynorm,x=xnorm)
-    #print "pdfs normalization: ",normalization
     
+    if efficiency!=None:
+        poly *= efficiency(x)
+
     return poly/normalization
 
 
