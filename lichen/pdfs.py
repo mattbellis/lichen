@@ -15,7 +15,8 @@ def exp(x,slope,xlo,xhi,num_int_points=1000):
     ynorm = exp_func.pdf(xnorm)
     normalization = integrate.simps(ynorm,x=xnorm)
     #normalization = 1.0
-    #print "pdfs normalization: ",normalization
+    #normalization = 1.0/slope
+    #print "exp pdfs normalization: ",normalization
     
     y = exp_func.pdf(x)/normalization
 
@@ -34,7 +35,8 @@ def gauss(x,mean,sigma,xlo,xhi,num_int_points=1000):
     ynorm = gauss_func.pdf(xnorm)
     normalization = integrate.simps(ynorm,x=xnorm)
     #normalization = 1.0
-    #print "pdfs normalization: ",normalization
+    #normalization = 1.0/np.sqrt(sigma)
+    #print "gauss pdfs normalization: ",normalization
     
     y = gauss_func.pdf(x)/normalization
 
@@ -58,7 +60,7 @@ def poly(x,constants,xlo,xhi,num_int_points=1000):
         ynorm += c*np.pow(xnorm,(i+1))
 
     normalization = integrate.simps(ynorm,x=xnorm)
-    #print "pdfs normalization: ",normalization
+    #print "poly pdfs normalization: ",normalization
     
     return poly/normalization
 
