@@ -7,7 +7,7 @@ import scipy.integrate as integrate
 # Exponential 
 # The slope is interpreted a negative
 ################################################################################
-def exp(x,slope,xlo,xhi,efficiency=None,num_int_points=1000):
+def exp(x,slope,xlo,xhi,efficiency=None,num_int_points=1000,subranges=None):
 
     xnorm = np.linspace(xlo,xhi,num_int_points)
     ynorm = np.exp(-slope*xnorm)
@@ -16,7 +16,19 @@ def exp(x,slope,xlo,xhi,efficiency=None,num_int_points=1000):
         ynorm *= efficiency(xnorm)
 
     normalization = integrate.simps(ynorm,x=xnorm)
-    
+
+    # Subranges of the normalization.
+    if subranges!=None:
+        normalization = 0.0
+        for sr in subranges:
+            xnorm = np.linspace(sr[0],sr[1],num_int_points)
+            ynorm = np.exp(-slope*xnorm)
+
+            if efficiency!=None:
+                ynorm *= efficiency(xnorm)
+
+            normalization += integrate.simps(ynorm,x=xnorm)
+
     y = np.exp(-slope*x)/normalization
 
     if efficiency!=None:
@@ -52,7 +64,7 @@ def gauss(x,mean,sigma,xlo,xhi,efficiency=None,num_int_points=1000):
 ################################################################################
 # Polynomial
 ################################################################################
-def poly(x,constants,xlo,xhi,efficiency=None,num_int_points=1000):
+def poly(x,constants,xlo,xhi,efficiency=None,num_int_points=1000,subranges=None):
 
     npts = len(x)
 
@@ -61,15 +73,30 @@ def poly(x,constants,xlo,xhi,efficiency=None,num_int_points=1000):
     xnorm = np.linspace(xlo,xhi,num_int_points)
     ynorm = np.ones(num_int_points)
 
-    if efficiency!=None:
-        ynorm *= efficiency(xnorm)
-
     for i,c in enumerate(constants):
         poly += c*np.pow(x,(i+1))
         ynorm += c*np.pow(xnorm,(i+1))
 
+    if efficiency!=None:
+        ynorm *= efficiency(xnorm)
+
     normalization = integrate.simps(ynorm,x=xnorm)
     
+    # Subranges of the normalization.
+    if subranges!=None:
+        normalization = 0.0
+        for sr in subranges:
+            xnorm = np.linspace(sr[0],sr[1],num_int_points)
+            ynorm = np.ones(num_int_points)
+
+            for i,c in enumerate(constants):
+                ynorm += c*np.pow(xnorm,(i+1))
+
+            if efficiency!=None:
+                ynorm *= efficiency(xnorm)
+
+            normalization += integrate.simps(ynorm,x=xnorm)
+
     if efficiency!=None:
         poly *= efficiency(x)
 
