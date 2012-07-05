@@ -36,6 +36,41 @@ def exp(x,slope,xlo,xhi,efficiency=None,num_int_points=1000,subranges=None):
 
     return y
 
+################################################################################
+# Cos term
+################################################################################
+def cos(x,frequency,phase,amplitude,offset,xlo,xhi,efficiency=None,num_int_points=1000,subranges=None):
+
+    xnorm = np.linspace(xlo,xhi,num_int_points)
+    ynorm = offset + amplitude*np.cos(frequency*xnorm + phase)
+
+    if efficiency!=None:
+        ynorm *= efficiency(xnorm)
+
+    normalization = integrate.simps(ynorm,x=xnorm)
+
+    # Subranges of the normalization.
+    if subranges!=None:
+        normalization = 0.0
+        for sr in subranges:
+            xnorm = np.linspace(sr[0],sr[1],num_int_points)
+            #ynorm = np.exp(-slope*xnorm)
+            ynorm = offset + amplitude*np.cos(frequency*xnorm + phase)
+
+            if efficiency!=None:
+                ynorm *= efficiency(xnorm)
+
+            normalization += integrate.simps(ynorm,x=xnorm)
+            #print "building normalization: ", normalization
+
+    #y = np.exp(-slope*x)/normalization
+    y = offset + amplitude*np.cos(frequency*x + phase)
+
+    if efficiency!=None:
+        y *= efficiency(x)
+
+    return y/normalization
+
 
 ################################################################################
 # Gaussian
