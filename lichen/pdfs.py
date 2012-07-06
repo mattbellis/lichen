@@ -31,8 +31,10 @@ def exp(x,slope,xlo,xhi,efficiency=None,num_int_points=1000,subranges=None):
 
     y = np.exp(-slope*x)/normalization
 
+    '''
     if efficiency!=None:
         y *= efficiency(x)
+    '''
 
     return y
 
@@ -97,9 +99,11 @@ def poly(x,constants,xlo,xhi,efficiency=None,num_int_points=1000,subranges=None)
 
             normalization += integrate.simps(ynorm,x=xnorm)
 
+    '''
     if efficiency!=None:
         poly *= efficiency(x)
 
+    '''
     return poly/normalization
 
 
