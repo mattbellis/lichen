@@ -7,7 +7,7 @@ import scipy.integrate as integrate
 # Exponential 
 # The slope is interpreted a negative
 ################################################################################
-def exp(x,slope,xlo,xhi,efficiency=None,num_int_points=1000,subranges=None):
+def exp(x,slope,xlo,xhi,efficiency=None,num_int_points=100,subranges=None):
 
     xnorm = np.linspace(xlo,xhi,num_int_points)
     ynorm = np.exp(-slope*xnorm)
@@ -39,7 +39,7 @@ def exp(x,slope,xlo,xhi,efficiency=None,num_int_points=1000,subranges=None):
 ################################################################################
 # Cos term
 ################################################################################
-def cos(x,frequency,phase,amplitude,offset,xlo,xhi,efficiency=None,num_int_points=1000,subranges=None):
+def cos(x,frequency,phase,amplitude,offset,xlo,xhi,efficiency=None,num_int_points=100,subranges=None):
 
     xnorm = np.linspace(xlo,xhi,num_int_points)
     ynorm = offset + amplitude*np.cos(frequency*xnorm + phase)
@@ -75,7 +75,7 @@ def cos(x,frequency,phase,amplitude,offset,xlo,xhi,efficiency=None,num_int_point
 ################################################################################
 # Gaussian
 ################################################################################
-def gauss(x,mean,sigma,xlo,xhi,efficiency=None,num_int_points=1000):
+def gauss(x,mean,sigma,xlo,xhi,efficiency=None,num_int_points=100):
 
     gauss_func = stats.norm(loc=mean,scale=sigma)
 
@@ -99,7 +99,7 @@ def gauss(x,mean,sigma,xlo,xhi,efficiency=None,num_int_points=1000):
 ################################################################################
 # Polynomial
 ################################################################################
-def poly(x,constants,xlo,xhi,efficiency=None,num_int_points=1000,subranges=None):
+def poly(x,constants,xlo,xhi,efficiency=None,num_int_points=100,subranges=None):
 
     npts = len(x)
 
