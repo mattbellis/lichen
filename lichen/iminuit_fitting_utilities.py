@@ -21,6 +21,9 @@ def dict2kwd(d,verbose=False):
         if 'limits' in v:
             new_key = "limit_%s" % (k)
             kwd[new_key] = v['limits']
+        if 'error' in v:
+            new_key = "error_%s" % (k)
+            kwd[new_key] = v['error']
 
     ''' 
     if 'num_bkg' in keys:

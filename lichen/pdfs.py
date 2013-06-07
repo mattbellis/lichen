@@ -99,6 +99,31 @@ def gauss(x,mean,sigma,xlo,xhi,efficiency=None,num_int_points=100):
 
 
 ################################################################################
+# Lorentzian
+################################################################################
+def lorentzian(x,mean,sigma,xlo,xhi,efficiency=None,num_int_points=100):
+
+    #lorentzian_func = stats.cauchy(loc=mean,scale=sigma)
+
+    xnorm = np.linspace(xlo,xhi,num_int_points)
+    #ynorm = lorentzian_func.pdf(xnorm)
+    ynorm = (1.0/np.pi)*sigma/((xnorm-mean)**2 + sigma**2)
+
+    if efficiency!=None:
+        ynorm *= efficiency(xnorm)
+
+    normalization = integrate.simps(ynorm,x=xnorm)
+    
+    #y = lorentzian_func.pdf(x)/normalization
+    y = ((1.0/np.pi)*sigma/((x-mean)**2 + sigma**2))/normalization
+
+    if efficiency!=None:
+        y *= efficiency(x)
+
+    return y
+
+
+################################################################################
 # Polynomial
 ################################################################################
 def poly(x,constants,xlo,xhi,efficiency=None,num_int_points=100,subranges=None):
