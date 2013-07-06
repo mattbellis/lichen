@@ -34,6 +34,12 @@ def hist_err(values,bins=100,range=None,fmt='o',color='blue',ecolor='black',mark
 ################################################################################
 def hist_2D(xvals,yvals,xbins=10,ybins=10,xrange=None,yrange=None,origin='lower',cmap=plt.cm.coolwarm,axes=None,aspect='auto',log=False):
 
+    # If no ranges are passed in, use the min and max of the x- and y-vals.
+    if xrange==None:
+        xrange = (min(xvals),max(xvals))
+    if yrange==None:
+        yrange = (min(yvals),max(xvals))
+
     # Note I am switching the expected order of xvals and yvals, following the 
     # comment in the SciPy tutorial.
     # ``Please note that the histogram does not follow the Cartesian convention 
