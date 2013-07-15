@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from scipy import optimize
 
 ################################################################################
-def hist_err(values,bins=100,range=None,fmt='o',color='blue',ecolor='black',markersize=2,axes=None,barsabove=False,capsize=0,linewidth=None):
+def hist_err(values,bins=100,range=None,fmt='o',color='blue',ecolor='black',markersize=2,axes=None,barsabove=False,capsize=0,linewidth=None,normed=False):
 
     nentries_per_bin, bin_edges, patches = plt.hist(values,bins=bins,
             range=range,alpha=0.0) # Make histogram transparent.
@@ -15,19 +15,34 @@ def hist_err(values,bins=100,range=None,fmt='o',color='blue',ecolor='black',mark
                                            # the last point which is the high
                                            # side of a bin.
 
-    ypts = nentries_per_bin
+    ypts = 1.0*nentries_per_bin.copy()
     xpts_err = bin_width/2.0
     ypts_err = np.sqrt(nentries_per_bin) # Use np.sqrt to take square root
                                          # of an array. We'll assume Gaussian
                                          # errors here.
+    if normed:
+        print "HERE INSIDE THE NORMED BOOLEAN"
+        print ypts
+        ntot = float(sum(nentries_per_bin))
+        print ntot
+        ypts /= ntot
+        ypts_err /= ntot
+
+        print ypts,ypts_err
 
     # If no axes are passed in, use the current axes available to plt.
     if axes==None:
         axes=plt.gca()
 
+    print "here"
+    print ypts
     ret = axes.errorbar(xpts, ypts, xerr=xpts_err, yerr=ypts_err,fmt=fmt,
             color=color,ecolor=ecolor,markersize=markersize,barsabove=barsabove,capsize=capsize,
             linewidth=linewidth)
+
+    if normed:
+        print "max: ",max(ypts)
+        axes.set_ylim(0,2.0*max(ypts))
 
     return ret,xpts,ypts,xpts_err,ypts_err
 
