@@ -21,27 +21,20 @@ def hist_err(values,bins=100,range=None,fmt='o',color='blue',ecolor='black',mark
                                          # of an array. We'll assume Gaussian
                                          # errors here.
     if normed:
-        print "HERE INSIDE THE NORMED BOOLEAN"
-        print ypts
         ntot = float(sum(nentries_per_bin))
-        print ntot
         ypts /= ntot
         ypts_err /= ntot
 
-        print ypts,ypts_err
 
     # If no axes are passed in, use the current axes available to plt.
     if axes==None:
         axes=plt.gca()
 
-    print "here"
-    print ypts
     ret = axes.errorbar(xpts, ypts, xerr=xpts_err, yerr=ypts_err,fmt=fmt,
             color=color,ecolor=ecolor,markersize=markersize,barsabove=barsabove,capsize=capsize,
             linewidth=linewidth)
 
     if normed:
-        print "max: ",max(ypts)
         axes.set_ylim(0,2.0*max(ypts))
 
     return ret,xpts,ypts,xpts_err,ypts_err
