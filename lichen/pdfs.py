@@ -124,6 +124,33 @@ def lorentzian(x,mean,sigma,xlo,xhi,efficiency=None,num_int_points=100):
 
 
 ################################################################################
+# Log normal
+################################################################################
+def lognormal(x,mean,sigma,xlo,xhi,efficiency=None,num_int_points=100):
+
+    lognorm = stats.lognorm(1,loc=mean,scale=sigma)
+
+    xnorm = np.linspace(xlo,xhi,num_int_points)
+    ynorm = lognorm.pdf(xnorm)
+    #ynorm = lorentzian_func.pdf(xnorm)
+    #ynorm = (1.0/np.pi)*sigma/((xnorm-mean)**2 + sigma**2)
+
+    if efficiency!=None:
+        ynorm *= efficiency(xnorm)
+
+    normalization = integrate.simps(ynorm,x=xnorm)
+    
+    #y = lorentzian_func.pdf(x)/normalization
+    #y = ((1.0/np.pi)*sigma/((x-mean)**2 + sigma**2))/normalization
+    y = lognorm.pdf(x)/normalization
+
+    if efficiency!=None:
+        y *= efficiency(x)
+
+    return y
+
+
+################################################################################
 # Polynomial
 ################################################################################
 def poly(x,constants,xlo,xhi,efficiency=None,num_int_points=100,subranges=None):
