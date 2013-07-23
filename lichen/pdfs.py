@@ -126,23 +126,28 @@ def lorentzian(x,mean,sigma,xlo,xhi,efficiency=None,num_int_points=100):
 ################################################################################
 # Log normal
 ################################################################################
-def lognormal(x,mean,sigma,xlo,xhi,efficiency=None,num_int_points=100):
+def lognormal(x,mu,sigma,xlo,xhi,efficiency=None,num_int_points=100):
 
-    lognorm = stats.lognorm(1,loc=mean,scale=sigma)
+    # Catch 0's. The ln(0) in the function will barf otherwise.
+    if xlo==0:
+        xlo = 0.0000000001
+
+    x[x==0] = 0.0000000001
+
+    #lognorm = stats.lognorm(1,loc=mu,scale=sigma)
 
     xnorm = np.linspace(xlo,xhi,num_int_points)
-    ynorm = lognorm.pdf(xnorm)
-    #ynorm = lorentzian_func.pdf(xnorm)
-    #ynorm = (1.0/np.pi)*sigma/((xnorm-mean)**2 + sigma**2)
+    #ynorm = lognorm.pdf(xnorm)
+    ynorm = (1.0/(xnorm*sigma*np.sqrt(2*np.pi)))*np.exp(-((np.log(xnorm)-mu)**2)/(2*sigma*sigma))
 
     if efficiency!=None:
         ynorm *= efficiency(xnorm)
 
     normalization = integrate.simps(ynorm,x=xnorm)
     
-    #y = lorentzian_func.pdf(x)/normalization
-    #y = ((1.0/np.pi)*sigma/((x-mean)**2 + sigma**2))/normalization
-    y = lognorm.pdf(x)/normalization
+    #y = lognorm.pdf(x)/normalization
+    y = (1.0/(x*sigma*np.sqrt(2*np.pi)))*np.exp(-((np.log(x)-mu)**2)/(2*sigma*sigma))
+    y /= normalization
 
     if efficiency!=None:
         y *= efficiency(x)
