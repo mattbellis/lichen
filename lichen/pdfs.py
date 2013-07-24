@@ -132,7 +132,11 @@ def lognormal(x,mu,sigma,xlo,xhi,efficiency=None,num_int_points=100):
     if xlo==0:
         xlo = 0.0000000001
 
-    x[x==0] = 0.0000000001
+    if type(x)==np.ndarray:
+        x[x==0] = 0.0000000001
+    else:
+        if x==0:
+            x = 0.0000000001
 
     #lognorm = stats.lognorm(1,loc=mu,scale=sigma)
 

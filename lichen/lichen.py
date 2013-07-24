@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 from scipy import optimize
 
 ################################################################################
-def hist_err(values,bins=100,range=None,fmt='o',color='blue',ecolor='black',markersize=2,axes=None,barsabove=False,capsize=0,linewidth=None,normed=False):
+def hist_err(values,bins=100,range=None,fmt='o',color='blue',ecolor='black',markersize=2,axes=None,barsabove=False,capsize=0,linewidth=None,normed=False,weights=None):
 
     nentries_per_bin, bin_edges, patches = plt.hist(values,bins=bins,
-            range=range,alpha=0.0) # Make histogram transparent.
+            range=range,alpha=0.0,weights=weights) # Make histogram transparent.
 
     # Create an errorbar plot using the info from the histogram.
     bin_width = bin_edges[1] - bin_edges[0] # Assumes evenly spaced bins.
