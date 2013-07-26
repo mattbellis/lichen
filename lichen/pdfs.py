@@ -138,20 +138,64 @@ def lognormal(x,mu,sigma,xlo,xhi,efficiency=None,num_int_points=100):
         if x==0:
             x = 0.0000000001
 
-    #lognorm = stats.lognorm(1,loc=mu,scale=sigma)
-
     xnorm = np.linspace(xlo,xhi,num_int_points)
-    #ynorm = lognorm.pdf(xnorm)
     ynorm = (1.0/(xnorm*sigma*np.sqrt(2*np.pi)))*np.exp(-((np.log(xnorm)-mu)**2)/(2*sigma*sigma))
 
+    #'''
     if efficiency!=None:
         ynorm *= efficiency(xnorm)
+    #'''
 
     normalization = integrate.simps(ynorm,x=xnorm)
     
-    #y = lognorm.pdf(x)/normalization
     y = (1.0/(x*sigma*np.sqrt(2*np.pi)))*np.exp(-((np.log(x)-mu)**2)/(2*sigma*sigma))
     y /= normalization
+
+    if efficiency!=None:
+        y *= efficiency(x)
+
+    return y
+
+
+################################################################################
+# 2D Log normal
+################################################################################
+def lognormal2D_unnormalized(x,y,mu_ks,sigma_ks,efficiency=None,num_int_points=100):
+
+    # Catch 0's. The ln(0) in the function will barf otherwise.
+    '''
+    if xlo==0:
+        xlo = 0.0000000001
+    '''
+
+    if type(x)==np.ndarray:
+        x[x==0] = 0.0000000001
+    else:
+        if x==0:
+            x = 0.0000000001
+
+    ma0 = mu_ks[0]
+    ma1 = mu_ks[1]
+    ma2 = mu_ks[2]
+
+    sa0 = sigma_ks[0]
+    sa1 = sigma_ks[1]
+    sa2 = sigma_ks[2]
+
+    mu = ma0 + ma1*y + ma2*y*y
+    sigma = sa0 + sa1*y + sa2*y*y
+
+    #ynorm = (1.0/(xnorm*sigma*np.sqrt(2*np.pi)))*np.exp(-((np.log(xnorm)-mu)**2)/(2*sigma*sigma))
+
+    '''
+    if efficiency!=None:
+        ynorm *= efficiency(xnorm)
+    '''
+
+    #normalization = integrate.simps(ynorm,x=xnorm)
+    
+    #y = lognorm.pdf(x)/normalization
+    y = (1.0/(x*sigma*np.sqrt(2*np.pi)))*np.exp(-((np.log(x)-mu)**2)/(2*sigma*sigma))
 
     if efficiency!=None:
         y *= efficiency(x)
