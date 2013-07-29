@@ -70,7 +70,7 @@ def hist_2D(xvals,yvals,xbins=10,ybins=10,xrange=None,yrange=None,origin='lower'
     ret = axes.imshow(H,extent=extent,interpolation='nearest',origin=origin,cmap=cmap,axes=axes,aspect=aspect)
     #colorbar = plt.colorbar(cax=axes)
 
-    return ret,xedges,yedges,extent
+    return ret,xedges,yedges,H,extent
 
 
 ################################################################################

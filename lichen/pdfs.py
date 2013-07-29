@@ -160,7 +160,7 @@ def lognormal(x,mu,sigma,xlo,xhi,efficiency=None,num_int_points=100):
 ################################################################################
 # 2D Log normal
 ################################################################################
-def lognormal2D_unnormalized(x,y,mu_ks,sigma_ks,efficiency=None,num_int_points=100):
+def lognormal2D_unnormalized(x,y,mu_k,sigma_k,amp_k=None,efficiency=None,num_int_points=100):
 
     # Catch 0's. The ln(0) in the function will barf otherwise.
     '''
@@ -174,16 +174,24 @@ def lognormal2D_unnormalized(x,y,mu_ks,sigma_ks,efficiency=None,num_int_points=1
         if x==0:
             x = 0.0000000001
 
-    ma0 = mu_ks[0]
-    ma1 = mu_ks[1]
-    ma2 = mu_ks[2]
+    ma0 = mu_k[0]
+    ma1 = mu_k[1]
+    ma2 = mu_k[2]
 
-    sa0 = sigma_ks[0]
-    sa1 = sigma_ks[1]
-    sa2 = sigma_ks[2]
+    sa0 = sigma_k[0]
+    sa1 = sigma_k[1]
+    sa2 = sigma_k[2]
 
     mu = ma0 + ma1*y + ma2*y*y
     sigma = sa0 + sa1*y + sa2*y*y
+
+    amp = 1.0
+    if amp_k is not None:
+        print "AMMMPPPP"
+        aa0 = amp_k[0]
+        aa1 = amp_k[1]
+        aa2 = amp_k[2]
+        amp = aa0 + aa1*y + aa2*y*y
 
     #ynorm = (1.0/(xnorm*sigma*np.sqrt(2*np.pi)))*np.exp(-((np.log(xnorm)-mu)**2)/(2*sigma*sigma))
 
@@ -194,13 +202,15 @@ def lognormal2D_unnormalized(x,y,mu_ks,sigma_ks,efficiency=None,num_int_points=1
 
     #normalization = integrate.simps(ynorm,x=xnorm)
     
-    #y = lognorm.pdf(x)/normalization
-    y = (1.0/(x*sigma*np.sqrt(2*np.pi)))*np.exp(-((np.log(x)-mu)**2)/(2*sigma*sigma))
+    #ret = lognorm.pdf(x)/normalization
+    ret = (1.0/(x*sigma*np.sqrt(2*np.pi)))*np.exp(-((np.log(x)-mu)**2)/(2*sigma*sigma))
+
+    ret *= amp
 
     if efficiency!=None:
-        y *= efficiency(x)
+        ret *= efficiency(x)
 
-    return y
+    return ret
 
 
 ################################################################################
