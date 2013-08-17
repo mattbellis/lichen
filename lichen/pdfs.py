@@ -31,10 +31,47 @@ def exp(x,slope,xlo,xhi,efficiency=None,num_int_points=100,subranges=None):
 
     y = np.exp(-slope*x)/normalization
 
-    '''
+    #'''
     if efficiency!=None:
         y *= efficiency(x)
-    '''
+    #'''
+
+    return y
+
+################################################################################
+# Exponential 
+# The slope is interpreted a negative
+################################################################################
+def exp_plus_flat(x,slope,expamp,flat,xlo,xhi,efficiency=None,num_int_points=100,subranges=None):
+
+    xnorm = np.linspace(xlo,xhi,num_int_points)
+    ynorm = expamp*np.exp(-slope*xnorm) + flat
+
+    if efficiency!=None:
+        ynorm *= efficiency(xnorm)
+
+    normalization = integrate.simps(ynorm,x=xnorm)
+
+    # Subranges of the normalization.
+    if subranges!=None:
+        normalization = 0.0
+        for sr in subranges:
+            xnorm = np.linspace(sr[0],sr[1],num_int_points)
+            #ynorm = np.exp(-slope*xnorm)
+            ynorm = expamp*np.exp(-slope*xnorm) + flat
+
+            if efficiency!=None:
+                ynorm *= efficiency(xnorm)
+
+            normalization += integrate.simps(ynorm,x=xnorm)
+
+    #y = np.exp(-slope*x)/normalization
+    y = (expamp*np.exp(-slope*x) + flat)/normalization
+
+    #'''
+    if efficiency!=None:
+        y *= efficiency(x)
+    #'''
 
     return y
 
