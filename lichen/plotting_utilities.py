@@ -5,7 +5,7 @@ import scipy.integrate as integrate
 ################################################################################
 # Plotting code for pdf
 ################################################################################
-def plot_pdf(x,ypts,bin_width=1.0,scale=1.0,efficiency=1.0,axes=None,fmt='-',subranges=None,linewidth=1,linecolor=None):
+def plot_pdf(x,ypts,bin_width=1.0,scale=1.0,efficiency=1.0,axes=None,fmt='-',subranges=None,linewidth=1,linecolor=None,label=None):
 
     y = None
     plot = None
@@ -48,9 +48,9 @@ def plot_pdf(x,ypts,bin_width=1.0,scale=1.0,efficiency=1.0,axes=None,fmt='-',sub
         y *= (scale*bin_width)
 
         if linecolor is not None:
-            plot = axes.plot(x,y,fmt,linewidth=linewidth,color=linecolor)
+            plot = axes.plot(x,y,fmt,linewidth=linewidth,color=linecolor,label=label)
         else:
-            plot = axes.plot(x,y,fmt,linewidth=linewidth)
+            plot = axes.plot(x,y,fmt,linewidth=linewidth,label=label)
         #ytot += y
         #ax0.plot(x,ytot,'b',linewidth=3)
 
@@ -60,7 +60,7 @@ def plot_pdf(x,ypts,bin_width=1.0,scale=1.0,efficiency=1.0,axes=None,fmt='-',sub
 ################################################################################
 # Plotting code for pdf
 ################################################################################
-def plot_pdf_from_lambda(func,bin_width=1.0,scale=1.0,efficiency=None,axes=None,fmt='-',linewidth=1,subranges=None):
+def plot_pdf_from_lambda(func,bin_width=1.0,scale=1.0,efficiency=None,axes=None,fmt='-',linewidth=1,subranges=None,label=None):
 
     y = None
     plot = None
@@ -106,7 +106,7 @@ def plot_pdf_from_lambda(func,bin_width=1.0,scale=1.0,efficiency=None,axes=None,
             ypts *= eff
 
             #print "norm*scale: ",norm*scale
-            ytemp,plottemp = plot_pdf(srx,ypts,bin_width=bin_width,scale=norm*scale,fmt=fmt,axes=axes,linewidth=linewidth)
+            ytemp,plottemp = plot_pdf(srx,ypts,bin_width=bin_width,scale=norm*scale,fmt=fmt,axes=axes,linewidth=linewidth,label=label)
             y.append(ytemp)
             plot.append(plottemp)
             #tot_sry += y
