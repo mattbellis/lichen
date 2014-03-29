@@ -263,8 +263,8 @@ def poly(x,constants,xlo,xhi,efficiency=None,num_int_points=100,subranges=None):
     ynorm = np.ones(num_int_points)
 
     for i,c in enumerate(constants):
-        poly += c*np.pow(x,(i+1))
-        ynorm += c*np.pow(xnorm,(i+1))
+        poly += c*np.power(x,(i+1))
+        ynorm += c*np.power(xnorm,(i+1))
 
     if efficiency!=None:
         ynorm *= efficiency(xnorm)
@@ -279,7 +279,7 @@ def poly(x,constants,xlo,xhi,efficiency=None,num_int_points=100,subranges=None):
             ynorm = np.ones(num_int_points)
 
             for i,c in enumerate(constants):
-                ynorm += c*np.pow(xnorm,(i+1))
+                ynorm += c*np.power(xnorm,(i+1))
 
             if efficiency!=None:
                 ynorm *= efficiency(xnorm)
