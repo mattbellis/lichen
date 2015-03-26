@@ -255,6 +255,12 @@ def lognormal2D_unnormalized(x,y,mu_k,sigma_k,amp_k=None,efficiency=None,num_int
 ################################################################################
 def poly(x,constants,xlo,xhi,efficiency=None,num_int_points=100,subranges=None):
 
+    if type(x)==np.ndarray:
+        x[x==0] = 0.0000000001
+    else:
+        x = np.array([x])
+        x[x==0] = 0.0000000001
+
     npts = len(x)
 
     poly = np.ones(npts)
