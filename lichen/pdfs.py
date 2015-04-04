@@ -292,11 +292,11 @@ def poly(x,constants,xlo,xhi,efficiency=None,num_int_points=100,subranges=None):
 
             normalization += integrate.simps(ynorm,x=xnorm)
 
-    '''
+    #'''
     if efficiency!=None:
         poly *= efficiency(x)
 
-    '''
+    #'''
     return poly/normalization
 
 
