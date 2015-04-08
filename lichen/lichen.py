@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from scipy import optimize
 
 ################################################################################
-def hist_err(values,bins=100,range=None,fmt='o',color='blue',ecolor='black',markersize=2,axes=None,barsabove=False,capsize=0,linewidth=None,normed=False,weights=None,label=None):
+def hist_err(values,bins=100,range=None,fmt='o',color='blue',ecolor='black',markersize=2,axes=None,barsabove=False,capsize=0,linewidth=None,normed=False,weights=None,label=None,alpha=1.0):
 
     nentries_per_bin, bin_edges, patches = plt.hist(values,bins=bins,
             range=range,alpha=0.0,weights=weights) # Make histogram transparent.
@@ -32,7 +32,7 @@ def hist_err(values,bins=100,range=None,fmt='o',color='blue',ecolor='black',mark
 
     ret = axes.errorbar(xpts, ypts, xerr=xpts_err, yerr=ypts_err,fmt=fmt,
             color=color,ecolor=ecolor,markersize=markersize,barsabove=barsabove,capsize=capsize,
-            linewidth=linewidth,label=label)
+            linewidth=linewidth,label=label,alpha=alpha)
 
     if normed:
         axes.set_ylim(0,2.0*max(ypts))
