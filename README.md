@@ -17,12 +17,12 @@ You may need to run this as root, depending on your permissions.
 # Hello world!
 ################################################################################
 
-import numpy as np
-import matplotlib.pylab as plt
+    import numpy as np
+    import matplotlib.pylab as plt
 
-import lichen.lichen as lch
+    import lichen.lichen as lch
 
-x = np.random.normal(5,1,1000)
-h = lch.hist_err(x,bins=50)
-plt.show()
+    x = np.random.normal(5,1,1000)
+    h = lch.hist_err(x,bins=50)
+    plt.show()
 
