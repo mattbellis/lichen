@@ -39,6 +39,75 @@ def exp(x,slope,xlo,xhi,efficiency=None,num_int_points=100,subranges=None):
     return y
 
 ################################################################################
+# The Ge response function for gammas
+################################################################################
+def Ge_gamma_response(x,slope,lowE_slope,rel_scale,xlo,xhi,efficiency=None,num_int_points=100,subranges=None):
+
+    ############################################################################
+    # Sawtooth
+    def sawtooth(x,k0,k1,n):
+        y = np.zeros(len(x))
+
+        b = [1.1,1.3]
+
+        index0 = x<b[0]
+        index1 = (x>=b[0])*(x<=b[1])
+        index2 = x>b[1]
+
+        i0 = np.where(index0==True)[0][-1]
+        i1 = np.where(index2==True)[0][0]
+
+        index = x>1.3
+        y[index] = np.exp(-k0*x[index])
+
+        index = (x>xlo)*(x<1.1)
+        y[index] = n*np.exp(-k1*x[index])
+
+        y0 = y[i0]; x0 = x[i0]
+        y1 = y[i1]; x1 = x[i1]
+
+        slope = (y1-y0)/(x1-x0)
+        intercept = y1 - slope*x1
+
+        y[i0+1:i1] = intercept + slope*x[i0+1:i1]
+
+        return y
+
+     ############################################
+    xnorm = np.linspace(xlo,xhi,num_int_points)
+    ynorm = sawtooth(xnorm,slope,lowE_slope,rel_scale)
+    #ynorm = np.exp(-slope*xnorm)
+
+    if efficiency!=None:
+        ynorm *= efficiency(xnorm)
+
+    normalization = integrate.simps(ynorm,x=xnorm)
+
+    # Subranges of the normalization.
+    if subranges!=None:
+        normalization = 0.0
+        for sr in subranges:
+            xnorm = np.linspace(sr[0],sr[1],num_int_points)
+            #ynorm = np.exp(-slope*xnorm)
+            ynorm = sawtooth(xnorm,slope,lowE_slope,rel_scale)
+
+            if efficiency!=None:
+                ynorm *= efficiency(xnorm)
+
+            normalization += integrate.simps(ynorm,x=xnorm)
+
+    #y = np.exp(-slope*x)/normalization
+    y = sawtooth(x,slope,lowE_slope,rel_scale)/normalization
+
+    #'''
+    if efficiency!=None:
+        y *= efficiency(x)
+    #'''
+
+    return y
+
+################################################################################
+################################################################################
 # Exponential 
 # The slope is interpreted a negative
 ################################################################################
