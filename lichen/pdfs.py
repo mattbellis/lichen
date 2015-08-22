@@ -45,33 +45,33 @@ def Ge_gamma_response(x,slope,lowE_slope,rel_scale,xlo,xhi,efficiency=None,num_i
 
     ############################################################################
     # Sawtooth
-    def sawtooth(x,k0,k1,n):
-        y = np.zeros(len(x))
+    def sawtooth(xpts,k0,k1,n):
+        ypts = np.zeros(len(xpts))
 
         b = [1.1,1.3]
+        #b = [1.1,1.1]
 
-        index0 = x<b[0]
-        index1 = (x>=b[0])*(x<=b[1])
-        index2 = x>b[1]
+        index0 = xpts<b[0]
+        index1 = (xpts>=b[0])*(xpts<=b[1])
+        index2 = xpts>b[1]
 
         i0 = np.where(index0==True)[0][-1]
         i1 = np.where(index2==True)[0][0]
 
-        index = x>1.3
-        y[index] = np.exp(-k0*x[index])
+        ypts[index2] = np.exp(-k0*xpts[index2])
+        ypts[index0] = n*np.exp(-k1*xpts[index0])
 
-        index = (x>xlo)*(x<1.1)
-        y[index] = n*np.exp(-k1*x[index])
-
-        y0 = y[i0]; x0 = x[i0]
-        y1 = y[i1]; x1 = x[i1]
+        y0 = ypts[i0]; x0 = xpts[i0]
+        y1 = ypts[i1]; x1 = xpts[i1]
 
         slope = (y1-y0)/(x1-x0)
         intercept = y1 - slope*x1
 
-        y[i0+1:i1] = intercept + slope*x[i0+1:i1]
+        #print "slope/intercept: ",slope,intercept
+        ypts[index1] = intercept + slope*xpts[index1]
+        #y = np.exp(-k0*x)
 
-        return y
+        return ypts
 
      ############################################
     xnorm = np.linspace(xlo,xhi,num_int_points)
