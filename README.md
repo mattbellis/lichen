@@ -12,6 +12,7 @@
 
 You may need to run this as root, depending on your permissions.
 
+    sudo python setup.py install
 
 ################################################################################
 # Hello world!
@@ -25,4 +26,5 @@ You may need to run this as root, depending on your permissions.
     x = np.random.normal(5,1,1000)
     h = lch.hist_err(x,bins=50)
     plt.show()
+
 
