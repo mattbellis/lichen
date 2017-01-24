@@ -12,7 +12,7 @@ def dict2kwd(d,verbose=False):
     kwd = {}
     for k,v in d.iteritems():
         if verbose:
-            print k,v
+            print(k,v)
         params_names += (k,)
         kwd[k] = v['start_val']
         if 'fix' in v and v['fix']==True:
@@ -69,7 +69,7 @@ class Minuit_FCN:
         self.func_code = Struct(co_argcount=len(params),co_varnames=varnames)
         self.func_defaults = None # Optional but makes vectorize happy
 
-        print "Finished with __init__"
+        print("Finished with __init__")
 
     def __call__(self,*arg):
         

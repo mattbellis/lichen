@@ -293,7 +293,7 @@ def lognormal2D_unnormalized(x,y,mu_k,sigma_k,amp_k=None,efficiency=None,num_int
 
     amp = 1.0
     if amp_k is not None:
-        print "AMMMPPPP"
+        print("AMMMPPPP")
         aa0 = amp_k[0]
         aa1 = amp_k[1]
         aa2 = amp_k[2]
