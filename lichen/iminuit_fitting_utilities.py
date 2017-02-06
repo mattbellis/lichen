@@ -10,7 +10,7 @@ def dict2kwd(d,verbose=False):
     params_names = ()
 
     kwd = {}
-    for k,v in d.iteritems():
+    for k,v in d.items():
         if verbose:
             print(k,v)
         params_names += (k,)
@@ -52,7 +52,7 @@ class Minuit_FCN:
         params_names = ()
         #limits = {}
         kwd = {}
-        for k,v in params.iteritems():
+        for k,v in params.items():
             params_names += (k,)
             '''
             if 'var_' in k and 'limits' in v:
