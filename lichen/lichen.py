@@ -57,7 +57,7 @@ def hist_2D(xvals,yvals,xbins=10,ybins=10,xrange=None,yrange=None,origin='lower'
     # This ensures compatibility with histogramdd.
     #
     # http://docs.scipy.org/doc/numpy/reference/generated/numpy.histogram2d.html
-    H,xedges,yedges = np.histogram2d(yvals,xvals,bins=[ybins,ybins],range=[yrange,xrange])
+    H,xedges,yedges = np.histogram2d(yvals,xvals,bins=[ybins,xbins],range=[yrange,xrange])
     extent = [yedges[0], yedges[-1], xedges[0], xedges[-1]]
 
     if log is True:
