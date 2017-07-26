@@ -40,7 +40,7 @@ def hist_err(values,bins=100,range=None,fmt='o',color='blue',ecolor='black',mark
     return ret,xpts,ypts,xpts_err,ypts_err
 
 ################################################################################
-def hist_2D(xvals,yvals,xbins=10,ybins=10,xrange=None,yrange=None,origin='lower',cmap=plt.cm.coolwarm,axes=None,aspect='auto',log=False):
+def hist_2D(xvals,yvals,xbins=10,ybins=10,xrange=None,yrange=None,origin='lower',cmap=plt.cm.coolwarm,axes=None,aspect='auto',log=False,weights=None):
 
     # If no ranges are passed in, use the min and max of the x- and y-vals.
     if xrange==None:
@@ -57,7 +57,7 @@ def hist_2D(xvals,yvals,xbins=10,ybins=10,xrange=None,yrange=None,origin='lower'
     # This ensures compatibility with histogramdd.
     #
     # http://docs.scipy.org/doc/numpy/reference/generated/numpy.histogram2d.html
-    H,xedges,yedges = np.histogram2d(yvals,xvals,bins=[ybins,xbins],range=[yrange,xrange])
+    H,xedges,yedges = np.histogram2d(yvals,xvals,bins=[ybins,xbins],range=[yrange,xrange],weights=weights)
     extent = [yedges[0], yedges[-1], xedges[0], xedges[-1]]
 
     if log is True:
