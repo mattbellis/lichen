@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.colors as colors
 
 from scipy import optimize
 
@@ -40,7 +41,7 @@ def hist_err(values,bins=100,range=None,fmt='o',color='blue',ecolor='black',mark
     return ret,xpts,ypts,xpts_err,ypts_err
 
 ################################################################################
-def hist_2D(xvals,yvals,xbins=10,ybins=10,xrange=None,yrange=None,origin='lower',cmap=plt.cm.coolwarm,axes=None,aspect='auto',log=False,weights=None):
+def hist_2D(xvals,yvals,xbins=10,ybins=10,xrange=None,yrange=None,origin='lower',cmap=plt.cm.coolwarm,axes=None,aspect='auto',log=False,weights=None,zlim=(None,None)):
 
     # If no ranges are passed in, use the min and max of the x- and y-vals.
     if xrange==None:
@@ -67,7 +68,7 @@ def hist_2D(xvals,yvals,xbins=10,ybins=10,xrange=None,yrange=None,origin='lower'
     if axes==None:
         axes=plt.gca()
 
-    ret = axes.imshow(H,extent=extent,interpolation='nearest',origin=origin,cmap=cmap,axes=axes,aspect=aspect)
+    ret = axes.imshow(H,extent=extent,interpolation='nearest',origin=origin,cmap=cmap,axes=axes,aspect=aspect,vmin=zlim[0],vmax=zlim[1])
     #colorbar = plt.colorbar(cax=axes)
 
     return ret,xedges,yedges,H,extent
