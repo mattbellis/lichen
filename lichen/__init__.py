@@ -17,3 +17,4 @@ __copyright__ = 'XXX'
 
 from . import lichen
 from .pdfs import *
+from .fit import *
