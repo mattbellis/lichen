@@ -530,10 +530,13 @@ def nnf(func,normrange=(0,10),data=None,num_int_points=100,verbose=False):
 
     xnorm = np.linspace(normrange[0],normrange[1],num_int_points)
 
-    normalization = integrate.simps(rv.pdf(xnorm),x=xnorm)
+    normalization = integrate.simps(func.pdf(xnorm),x=xnorm)
     if verbose:
         print("normalization: {0}".format(normalization))
 
-    return rv.pdf(data)/normalization
+    if data is None:
+        return func.pdf(xnorm)/normalization,xnorm
+    else:
+        return func.pdf(data)/normalization,xnorm
 
 
