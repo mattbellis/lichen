@@ -526,11 +526,25 @@ def pdf_bmixing(deltat,pars):
 ################################################################################
 # nnf: numerically normalize function
 ################################################################################
-def nnf(func,normrange=(0,10),data=None,num_int_points=100,verbose=False):
+def nnf(func,normrange=(0,10),data=None,num_int_points=100,verbose=False,subnormranges=None):
 
     xnorm = np.linspace(normrange[0],normrange[1],num_int_points)
 
-    normalization = integrate.simps(func.pdf(xnorm),x=xnorm)
+    # Subranges of the normalization.
+    normalization = 1.0
+    if subnormranges!=None:
+        xnormtot = []
+        normalization = 0.0
+        for sr in subnormranges:
+            xnorm = np.linspace(sr[0],sr[1],num_int_points)
+            ynorm = func.pdf(xnorm)
+
+            normalization += integrate.simps(ynorm,x=xnorm)
+            xnormtot += xnorm.tolist()
+        xnorm = np.array(xnormtot)
+    else:
+        normalization = integrate.simps(func.pdf(xnorm),x=xnorm)
+
     if verbose:
         print("normalization: {0}".format(normalization))
 

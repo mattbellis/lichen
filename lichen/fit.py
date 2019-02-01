@@ -86,7 +86,8 @@ def errfunc(pars, x, y, fix_or_float=[],params_dictionary=None,pdf=None,verbose=
   nums = get_numbers(params_dictionary)
   ntot = sum(nums)
 
-  ret = (-np.log(pdf(params_dictionary, x, frange=(0,10))) .sum()) - pois(ntot, len(x))
+  # Assume the data (x) is actually multidimensional
+  ret = (-np.log(pdf(params_dictionary, x, frange=(0,10))) .sum()) - pois(ntot, len(x[0]))
 
   if verbose:
       print("NLL (errfunc): ",ret)
@@ -110,13 +111,13 @@ def get_values_and_bounds(pars):
     return values,bounds
 
 ################################################################################
-def fit_emlm(func, pars, data):
+def fit_emlm(func, pars, data, verbose=False):
 
     # Need to do this for the fit.
     # Need to pull out starting values and
     p0,parbounds = get_values_and_bounds(pars)
 
-    p1 = fmin_l_bfgs_b(errfunc, p0, args=(data, data, [], pars, func), bounds=parbounds, approx_grad=True, epsilon=1e-8)#, maxiter=100 )#,factr=0.1)
+    p1 = fmin_l_bfgs_b(errfunc, p0, args=(data, data, [], pars, func, verbose), bounds=parbounds, approx_grad=True, epsilon=1e-8)#, maxiter=100 )#,factr=0.1)
 
     finalvals = p1[0]
 
