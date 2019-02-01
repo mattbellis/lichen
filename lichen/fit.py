@@ -26,23 +26,39 @@ class Parameter:
         self.limits = (lo,hi)
 
     def __init__(self,value,limits):
-        if limits[0]>value:
-            print("value {0} is lower than the lo limit {1}!".format(value,limits[0]))
-            exit()
-        if limits[1]<value:
-            print("value {0} is greater than the hi limit {1}!".format(value,limits[1]))
-            exit()
-        self.value = value
-        self.limits = limits
+        if limits is None:
+            self.value = value
+            self.limits = limits
+        else:
+            if len(limits)==2:
+                if limits[0]>value:
+                    print("value {0} is lower than the lo limit {1}!".format(value,limits[0]))
+                    exit()
+                if limits[1]<value:
+                    print("value {0} is greater than the hi limit {1}!".format(value,limits[1]))
+                    exit()
+
+                self.value = value
+                self.limits = limits
 
 
 ################################################################################
 def pretty_print_parameters(params_dictionary):
+    print("Floating parameters")
     for key in params_dictionary:
         if key=="mapping":
             continue
         for k in params_dictionary[key].keys():
-            print("{0:20} {1:20} {2}".format(key,k,params_dictionary[key][k].value))
+            if params_dictionary[key][k].limits is not None:
+                print("{0:20} {1:20} {2}".format(key,k,params_dictionary[key][k].value))
+
+    print("\nFixed parameters")
+    for key in params_dictionary:
+        if key=="mapping":
+            continue
+        for k in params_dictionary[key].keys():
+            if params_dictionary[key][k].limits is None:
+                print("{0:20} {1:20} {2}".format(key,k,params_dictionary[key][k].value))
 
 
 ################################################################################
@@ -62,9 +78,14 @@ def reset_parameters(params_dict,params):
 
     mapping = params_dict["mapping"]
 
-    for val,m in zip(params,mapping):
+    # We will only set the ones that are mapped onto the values (params)
+    # that are floated by the algorithm
+    for m in mapping:
         
-        params_dict[m[0]][m[1]].value = val
+        major_key = m[0]
+        minor_key = m[1]
+        value_idx = m[2]
+        params_dict[major_key][minor_key].value = params[value_idx]
 
 ################################################################################
 
@@ -85,26 +106,38 @@ def errfunc(pars, x, y, fix_or_float=[],params_dictionary=None,pdf=None,verbose=
 
   nums = get_numbers(params_dictionary)
   ntot = sum(nums)
+  ndata = len(x[0])
 
   # Assume the data (x) is actually multidimensional
-  ret = (-np.log(pdf(params_dictionary, x, frange=(0,10))) .sum()) - pois(ntot, len(x[0]))
+  ret = (-np.log(pdf(params_dictionary, x, frange=(0,10))) .sum()) - pois(ntot, ndata)
 
   if verbose:
-      print("NLL (errfunc): ",ret)
+      print("NLL (errfunc): {0}     ntot: {1}    ndata:{2}".format(ret,ntot,ndata))
 
   return ret
 ################################################################################
 
+################################################################################
 def get_values_and_bounds(pars):
     values = []
     bounds = []
     mapping = []
+    # Loop over the parameter names
+    values_idx = 0
     for key in pars:
+
+        print(key)
         
         for k in pars[key].keys():
-            values.append(pars[key][k].value)
-            bounds.append(pars[key][k].limits)
-            mapping.append((key,k))
+            print("\t",k)
+            bound = pars[key][k].limits
+            # Check to see if the bounds are None. If they are
+            # then this parameter is *fixed* in the fit. 
+            if bound is not None:
+                bounds.append(pars[key][k].limits)
+                values.append(pars[key][k].value)
+                mapping.append([key,k,values_idx])
+                values_idx += 1
 
     pars['mapping'] = mapping
 
