@@ -1,5 +1,8 @@
 [![DOI](https://zenodo.org/badge/12589/mattbellis/lichen.svg)](http://dx.doi.org/10.5281/zenodo.17256)
 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/mattbellis/lichen/master)
+
+
 ################################################################################
 # README
 ################################################################################
