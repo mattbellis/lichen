@@ -5,7 +5,7 @@ import matplotlib.colors as colors
 from scipy import optimize
 
 ################################################################################
-def hist_err(values,bins=100,range=None,fmt='o',color='blue',ecolor='black',markersize=2,axes=None,barsabove=False,capsize=0,linewidth=1,normed=False,weights=None,label=None,alpha=0.0):
+def hist(values,bins=100,range=None,fmt='o',color='blue',ecolor='black',markersize=2,axes=None,barsabove=False,capsize=0,linewidth=1,normed=False,weights=None,label=None,alpha=0.0):
 
     nentries_per_bin, bin_edges, patches = plt.hist(values,bins=bins,
             range=range,alpha=alpha,weights=weights) # Make histogram transparent.
@@ -41,7 +41,7 @@ def hist_err(values,bins=100,range=None,fmt='o',color='blue',ecolor='black',mark
     return ret,xpts,ypts,xpts_err,ypts_err
 
 ################################################################################
-def hist_2D(xvals,yvals,xbins=10,ybins=10,xrange=None,yrange=None,origin='lower',cmap=plt.cm.coolwarm,axes=None,aspect='auto',log=False,weights=None,zlim=(None,None)):
+def hist2d(xvals,yvals,xbins=10,ybins=10,xrange=None,yrange=None,origin='lower',cmap=plt.cm.coolwarm,axes=None,aspect='auto',log=False,weights=None,zlim=(None,None)):
 
     # If no ranges are passed in, use the min and max of the x- and y-vals.
     if xrange==None:
