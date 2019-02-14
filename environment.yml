@@ -2,3 +2,4 @@ name: lichen-environment
 dependencies:
   - numpy
   - matplotlib
+  - scipy
