@@ -1,6 +1,4 @@
-name: example-environment
-channels:
-  - conda-forge
+name: lichen-environment
 dependencies:
   - numpy
   - matplotlib
