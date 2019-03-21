@@ -161,6 +161,8 @@ def fit_emlm(func, pars, data, verbose=False, constraints=None):
 
     reset_parameters(pars,finalvals)
 
+    pars.pop('mapping',None)
+
     return p0,p1
 
 
